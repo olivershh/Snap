@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { Button, View, StyleSheet, Text } from "react-native";
 
-export default function Profile() {
+export default function Profile({ setHasUser }) {
   const [isPressed, setIsPressed] = useState(false);
 
   return (
     <View style={[styles.container, isPressed && { backgroundColor: "blue" }]}>
       <Text>Profile page</Text>
       <Button
-        title="Profile"
+        title="Logout"
         onPress={() => {
           setIsPressed(!isPressed);
+          setHasUser(false);
         }}
       />
     </View>

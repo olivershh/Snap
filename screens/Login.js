@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Button, View, StyleSheet, Text } from "react-native";
 
-export default function Login() {
+export default function Login({ hasUser, setHasUser }) {
   const [isPressed, setIsPressed] = useState(false);
 
   return (
@@ -11,6 +11,7 @@ export default function Login() {
         title="Login"
         onPress={() => {
           setIsPressed(!isPressed);
+          setHasUser(!hasUser);
         }}
       />
     </View>
