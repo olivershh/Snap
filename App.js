@@ -12,11 +12,11 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Text style={{ flex: 1 }}>Snap</Text>
-      <View style={{ flex: 8 }}></View>
+      {/* <Text style={{ flex: 1 }}>Snap</Text>
+      <View style={{ flex: 8 }}></View> */}
       <NavigationContainer style={{ flex: 1 }}>
         <Tab.Navigator>
-          {/* <Tab.Screen name="Login" component={Login} /> */}
+          <Tab.Screen name="Login" component={Login} />
           <Tab.Screen name="Profile" component={Profile} />
           <Tab.Screen name="Camera" component={Camera} />
           <Tab.Screen name="Albums" component={Albums} />
