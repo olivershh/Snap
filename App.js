@@ -5,7 +5,7 @@ import { useState } from "react";
 import Login from "./screens/Login";
 import Profile from "./screens/Profile";
 import Albums from "./screens/Albums";
-import Camera from "./screens/Camera";
+import CameraScreen from "./screens/CameraScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -19,7 +19,7 @@ export default function App() {
       <SafeAreaView style={{ flex: 1 }}>
         <NavigationContainer style={{ flex: 1 }}>
           <Tab.Navigator>
-            <Tab.Screen name="Camera" component={Camera} />
+            <Tab.Screen name="Camera" component={CameraScreen} />
             <Tab.Screen name="Albums" component={Albums} />
             <Tab.Screen
               name="Profile"
