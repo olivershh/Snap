@@ -1,55 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
-
-import Button from "../components/Button";
-import { Dimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CameraView from "../components/CameraView";
 import CameraControls from "../components/CameraControls";
-const windowWidth = Dimensions.get("window").width;
+import CameraImageTaken from "../components/CameraImageTaken";
 
 export default function CameraScreen() {
-  // const [permission, requestPermission] = Camera.useCameraPermissions();
   const cameraRef = useRef(null);
   const [image, setImage] = useState(null);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
+    <SafeAreaView style={{ padding: 15, backgroundColor: "gray", flex: 1 }}>
+      <View style={{ padding: 15, backgroundColor: "white" }}>
         {!image ? (
-          <View style={styles.cameraContainer}>
-            <CameraView cameraRef={cameraRef} />
-          </View>
+          <CameraView cameraRef={cameraRef} />
         ) : (
-          <View style={styles.cameraContainer}>
-            <Image source={{ uri: image }} style={styles.camera} />
-          </View>
+          <CameraImageTaken image={image} />
         )}
-        <View>
-          {image ? (
-            <View
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingHorizontal: 50,
-              }}
-            >
-              <Button
-                title="Re-take"
-                icon="retweet"
-                onPress={() => {
-                  setImage(null);
-                }}
-              />
-            </View>
-          ) : (
-            <CameraControls cameraRef={cameraRef} setImage={setImage} />
-          )}
-        </View>
       </View>
+
+      <CameraControls cameraRef={cameraRef} setImage={setImage} image={image} />
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({});

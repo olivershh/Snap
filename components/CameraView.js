@@ -5,7 +5,7 @@ import Button from "./Button";
 
 export default function CameraView({ cameraRef }) {
   const [type, setType] = useState(Camera.Constants.Type.back);
-
+  // const [permission, requestPermission] = Camera.useCameraPermissions();
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
 
@@ -21,7 +21,7 @@ export default function CameraView({ cameraRef }) {
   }
 
   return (
-    <Camera style={styles.camera} type={type} flashMode={flash} ref={cameraRef}>
+    <Camera style={styles.image} type={type} flashMode={flash} ref={cameraRef}>
       <View style={styles.inViewButtons}>
         <Button
           icon="retweet"
@@ -52,6 +52,9 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 30,
+    padding: 15,
+  },
+  image: {
+    aspectRatio: 1,
   },
 });
