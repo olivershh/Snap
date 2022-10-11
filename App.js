@@ -18,7 +18,7 @@ export default function App() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <NavigationContainer style={{ flex: 1 }}>
-          <Tab.Navigator>
+          <Tab.Navigator screenOptions={{ headerShown: false }}>
             <Tab.Screen name="Camera" component={CameraScreen} />
             <Tab.Screen name="Albums" component={Albums} />
             <Tab.Screen
