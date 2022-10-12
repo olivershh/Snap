@@ -15,10 +15,11 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const TabNav = () => {
     return (
-      <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Navigator screenOptions={{ headerShown: true }}>
         <Tab.Screen name="Camera" component={CameraScreen} />
         <Tab.Screen name="Albums" component={Albums} />
         <Tab.Screen name="Profile" children={() => <Profile />} />
+        <Tab.Screen name="SinglePhotoScreen" component={SinglePhotoScreen} />
       </Tab.Navigator>
     );
   };
@@ -26,7 +27,7 @@ export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <NavigationContainer style={{ flex: 1 }}>
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen
             options={{ headerShown: false }}
             name="Login"
