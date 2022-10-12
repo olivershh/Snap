@@ -14,7 +14,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const TabNav = () => {
     return (
-      <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Navigator screenOptions={{ headerShown: true }}>
         <Tab.Screen name="Camera" component={CameraScreen} />
         <Tab.Screen name="Albums" component={Albums} />
         <Tab.Screen name="Profile" children={() => <Profile />} />
@@ -24,6 +24,7 @@ export default function App() {
   };
 
   return (
+
     <NavigationContainer style={{ flex: 1 }}>
       <Stack.Navigator>
         <Stack.Screen
@@ -34,6 +35,7 @@ export default function App() {
         <Stack.Screen name="Home" component={TabNav}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
+
   );
 }
 
