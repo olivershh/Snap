@@ -1,28 +1,137 @@
-import { useState, useContext } from "react";
-import { Button, View, StyleSheet, Text } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Text,
+  TextInput,
+  StyleSheet,
+  View,
+  Button,
+  TouchableOpacity,
+} from "react-native";
+import { useEffect, useState } from "react";
+import { auth } from "../firebaseSetup";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { useNavigation } from "@react-navigation/native";
 
-export default function Login({ hasUser, setHasUser }) {
-  const [isPressed, setIsPressed] = useState(false);
+function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.navigate("Home");
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const handleSignUp = () => {
+    console.log("attempt to sign up");
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log("registered with: ", user.email);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+
+  const handleLogIn = () => {
+    console.log("attempt to sign in");
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log("logged in with: ", user.email);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
 
   return (
-    <View style={[styles.container, isPressed && { backgroundColor: "blue" }]}>
-      <Text>Login page</Text>
-      <Button
-        title="Login"
-        onPress={() => {
-          setIsPressed(!isPressed);
-          setHasUser(!hasUser);
-        }}
-      />
-    </View>
+    <KeyboardAvoidingView style={styles.container}>
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          style={styles.input}
+          secureTextEntry
+        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={handleLogIn} style={styles.button}>
+          <Text style={styles.buttonText}>Log in</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={handleSignUp}
+          style={[styles.button, styles.buttonOutline]}
+        >
+          <Text style={styles.buttonOutlineText}>Sign up</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
+
+export default Login;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center",
+  },
+  inputContainer: {
+    width: "80%",
+  },
+  input: {
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 5,
+  },
+  buttonContainer: {
+    width: "60%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 40,
+  },
+  button: {
+    backgroundColor: "#0782F9",
+    width: "100%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  buttonOutline: {
+    backgroundColor: "white",
+    marginTop: 5,
+    borderColor: "#0782F9",
+    borderWidth: 3,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "700",
+    fontSize: 16,
+  },
+  buttonOutlineText: {
+    color: "#0782F9",
   },
 });
