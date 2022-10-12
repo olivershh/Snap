@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, Button } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useState } from "react";
 import Login from "./screens/Login";
 import Profile from "./screens/Profile";
@@ -9,27 +10,33 @@ import CameraScreen from "./screens/CameraScreen";
 import SinglePhotoScreen from "./screens/SinglePhotoScreen";
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [hasUser, setHasUser] = useState(false);
-
-  if (!hasUser) {
-    return <Login hasUser={hasUser} setHasUser={setHasUser} />;
-  } else {
+  const TabNav = () => {
     return (
-      <NavigationContainer style={{ flex: 1 }}>
-        <Tab.Navigator screenOptions={{ headerShown: false }}>
-          <Tab.Screen name="Camera" component={CameraScreen} />
-          <Tab.Screen name="Albums" component={Albums} />
-          <Tab.Screen
-            name="Profile"
-            children={() => <Profile setHasUser={setHasUser} />}
-          />
-          <Tab.Screen name="Photo" component={SinglePhotoScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
+        <Tab.Screen name="Camera" component={CameraScreen} />
+        <Tab.Screen name="Albums" component={Albums} />
+        <Tab.Screen name="Profile" children={() => <Profile />} />
+      </Tab.Navigator>
     );
-  }
+  };
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <NavigationContainer style={{ flex: 1 }}>
+        <Stack.Navigator>
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Login"
+            component={Login}
+          />
+          <Stack.Screen name="Home" component={TabNav}></Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
