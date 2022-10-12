@@ -6,6 +6,7 @@ import Login from "./screens/Login";
 import Profile from "./screens/Profile";
 import Albums from "./screens/Albums";
 import CameraScreen from "./screens/CameraScreen";
+import SinglePhotoScreen from "./screens/SinglePhotoScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -16,18 +17,17 @@ export default function App() {
     return <Login hasUser={hasUser} setHasUser={setHasUser} />;
   } else {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <NavigationContainer style={{ flex: 1 }}>
-          <Tab.Navigator screenOptions={{ headerShown: false }}>
-            <Tab.Screen name="Camera" component={CameraScreen} />
-            <Tab.Screen name="Albums" component={Albums} />
-            <Tab.Screen
-              name="Profile"
-              children={() => <Profile setHasUser={setHasUser} />}
-            />
-          </Tab.Navigator>
-        </NavigationContainer>
-      </SafeAreaView>
+      <NavigationContainer style={{ flex: 1 }}>
+        <Tab.Navigator screenOptions={{ headerShown: false }}>
+          <Tab.Screen name="Camera" component={CameraScreen} />
+          <Tab.Screen name="Albums" component={Albums} />
+          <Tab.Screen
+            name="Profile"
+            children={() => <Profile setHasUser={setHasUser} />}
+          />
+          <Tab.Screen name="Photo" component={SinglePhotoScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
     );
   }
 }
