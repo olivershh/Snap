@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, SafeAreaView, Button } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useState } from "react";
 import Login from "./screens/Login";
 import Profile from "./screens/Profile";
 import Albums from "./screens/Albums";
@@ -19,24 +18,24 @@ export default function App() {
         <Tab.Screen name="Camera" component={CameraScreen} />
         <Tab.Screen name="Albums" component={Albums} />
         <Tab.Screen name="Profile" children={() => <Profile />} />
-        <Tab.Screen name="SinglePhotoScreen" component={SinglePhotoScreen} />
+        <Tab.Screen name="TempSingle" component={SinglePhotoScreen} />
       </Tab.Navigator>
     );
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <NavigationContainer style={{ flex: 1 }}>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="Login"
-            component={Login}
-          />
-          <Stack.Screen name="Home" component={TabNav}></Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
+
+    <NavigationContainer style={{ flex: 1 }}>
+      <Stack.Navigator>
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Login"
+          component={Login}
+        />
+        <Stack.Screen name="Home" component={TabNav}></Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+
   );
 }
 
