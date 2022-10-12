@@ -7,6 +7,7 @@ import Login from "./screens/Login";
 import Profile from "./screens/Profile";
 import Albums from "./screens/Albums";
 import CameraScreen from "./screens/CameraScreen";
+import SinglePhotoScreen from "./screens/SinglePhotoScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
