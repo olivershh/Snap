@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useEffect, useState } from "react";
-import { auth } from "../firebaseSetup";
+import { auth, db } from "../firebaseSetup";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -16,6 +16,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
+import { collection, addDoc } from "firebase/firestore";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -33,7 +34,7 @@ function Login() {
     return unsubscribe;
   }, []);
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     console.log("attempt to sign up");
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
@@ -43,6 +44,16 @@ function Login() {
       .catch((error) => {
         alert(error.message);
       });
+    try {
+      const docRef = await addDoc(collection(db, "users"), {
+        first: "Ada",
+        last: "Lovelace",
+        born: 1815,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   const handleLogIn = () => {
