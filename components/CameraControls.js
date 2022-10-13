@@ -1,9 +1,12 @@
+
 import {useState} from "react";
 import {View, Text} from "react-native";
 import Button from "./Button";
 import {storage, auth} from "../firebaseSetup";
 import {ref, uploadBytes} from "firebase/storage";
 import Film from "./Film";
+import * as ImageManipulator from "expo-image-manipulator";
+
 
 export default function CameraControls({cameraRef, setImage, image}) {
   const [film, setFilm] = useState({name: "Album 1", photosTaken: 0, size: 20});
@@ -11,7 +14,20 @@ export default function CameraControls({cameraRef, setImage, image}) {
     if (cameraRef) {
       try {
         const data = await cameraRef.current.takePictureAsync();
-        setImage(data.uri);
+        const crop = await ImageManipulator.manipulateAsync(
+          data.uri,
+          [
+            {
+              resize: {
+                width: 2000,
+                height: 2000,
+              },
+            },
+          ],
+          { compress: 1, format: ImageManipulator.SaveFormat.PNG }
+        );
+//         setImage(data.uri);
+        setImage(crop.uri);
         setFilm((currFilm) => {
           const newFilm = {...currFilm};
           newFilm.photosTaken = currFilm.photosTaken + 1;
@@ -32,6 +48,9 @@ export default function CameraControls({cameraRef, setImage, image}) {
           "photo uploaded: ",
           `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
         );
+
+       
+
       } catch (e) {
         console.log(e);
       }
