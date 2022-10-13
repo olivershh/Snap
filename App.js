@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./screens/Login";
 import Profile from "./screens/Profile";
-import Albums from "./screens/Albums";
+import AlbumStack from "./stacks/AlbumStack";
 import CameraScreen from "./screens/CameraScreen";
 import SinglePhotoScreen from "./screens/SinglePhotoScreen";
 
@@ -16,7 +16,7 @@ export default function App() {
     return (
       <Tab.Navigator screenOptions={{ headerShown: true }}>
         <Tab.Screen name="Camera" component={CameraScreen} />
-        <Tab.Screen name="Albums" component={Albums} />
+        <Tab.Screen name="Albums" component={AlbumStack} />
         <Tab.Screen name="Profile" children={() => <Profile />} />
         <Tab.Screen name="TempSingle" component={SinglePhotoScreen} />
       </Tab.Navigator>
@@ -24,7 +24,6 @@ export default function App() {
   };
 
   return (
-
     <NavigationContainer style={{ flex: 1 }}>
       <Stack.Navigator>
         <Stack.Screen
@@ -35,7 +34,6 @@ export default function App() {
         <Stack.Screen name="Home" component={TabNav}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
-
   );
 }
 
