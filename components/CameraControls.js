@@ -1,8 +1,15 @@
-import { View, Text } from "react-native";
+
+import {useState} from "react";
+import {View, Text} from "react-native";
 import Button from "./Button";
+import {storage, auth} from "../firebaseSetup";
+import {ref, uploadBytes} from "firebase/storage";
+import Film from "./Film";
 import * as ImageManipulator from "expo-image-manipulator";
 
-export default function CameraControls({ cameraRef, setImage, image }) {
+
+export default function CameraControls({cameraRef, setImage, image}) {
+  const [film, setFilm] = useState({name: "Album 1", photosTaken: 0, size: 20});
   const takePicture = async () => {
     if (cameraRef) {
       try {
@@ -19,8 +26,31 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           ],
           { compress: 1, format: ImageManipulator.SaveFormat.PNG }
         );
-        setImage(data.uri);
+//         setImage(data.uri);
         setImage(crop.uri);
+        setFilm((currFilm) => {
+          const newFilm = {...currFilm};
+          newFilm.photosTaken = currFilm.photosTaken + 1;
+          return newFilm;
+        });
+        console.log(
+          "in the process: ",
+          `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+        );
+        const imageRef = ref(
+          storage,
+          `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+        );
+        const img = await fetch(data.uri);
+        const bytes = await img.blob();
+        await uploadBytes(imageRef, bytes);
+        console.log(
+          "photo uploaded: ",
+          `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+        );
+
+       
+
       } catch (e) {
         console.log(e);
       }
@@ -33,9 +63,9 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
   return (
     <View
-      style={{ backgroundColor: "white", flex: 1, marginTop: 20, padding: 15 }}
+      style={{backgroundColor: "white", flex: 1, marginTop: 20, padding: 15}}
     >
-      <Text>film component here</Text>
+      <Film film={film} />
 
       {!image ? (
         <Button
