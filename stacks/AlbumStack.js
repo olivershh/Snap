@@ -11,7 +11,7 @@ const Stack = createNativeStackNavigator();
 export default AlbumStack = ({ navigation }) => {
   return (
     <AlbumProvider>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="Albums"
           component={Albums}

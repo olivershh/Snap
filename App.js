@@ -16,7 +16,7 @@ export default function App() {
     return (
       <Tab.Navigator screenOptions={{ headerShown: true }}>
         <Tab.Screen name="Camera" component={CameraScreen} />
-        <Tab.Screen name="Albums" component={AlbumStack} />
+        <Tab.Screen name="AlbumStack" component={AlbumStack} />
         <Tab.Screen name="Profile" children={() => <Profile />} />
         <Tab.Screen name="TempSingle" component={SinglePhotoScreen} />
       </Tab.Navigator>
