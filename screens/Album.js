@@ -6,25 +6,25 @@ const fakePicObjects = [
   {
     image: require("../fakeImage.jpeg"),
     caption: "caption here",
-    date: "1/1/2001",
+    date: "1/9/2021",
     id: 1,
   },
   {
     image: require("../fakeImage.jpeg"),
-    caption: "caption here",
-    date: "1/1/2001",
+    caption: "another caption here",
+    date: "23/1/2001",
     id: 2,
   },
   {
     image: require("../fakeImage.jpeg"),
-    caption: "caption here",
-    date: "1/1/2001",
+    caption: "also a caption",
+    date: "1/11/2001",
     id: 3,
   },
   {
     image: require("../fakeImage.jpeg"),
     caption: "caption here",
-    date: "1/1/2001",
+    date: "1/1/2008",
     id: 4,
   },
 ];
