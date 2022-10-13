@@ -18,14 +18,14 @@ export default function App() {
         <Tab.Screen name="Camera" component={CameraScreen} />
         <Tab.Screen name="AlbumStack" component={AlbumStack} />
         <Tab.Screen name="Profile" children={() => <Profile />} />
-        <Tab.Screen name="TempSingle" component={SinglePhotoScreen} />
+        {/* <Tab.Screen name="TempSingle" component={SinglePhotoScreen} /> */}
       </Tab.Navigator>
     );
   };
 
   return (
     <NavigationContainer style={{ flex: 1 }}>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen
           options={{ headerShown: false }}
           name="Login"
