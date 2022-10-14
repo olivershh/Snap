@@ -4,19 +4,16 @@ import {
   TextInput,
   StyleSheet,
   View,
-  Button,
   TouchableOpacity,
 } from "react-native";
-import {useEffect, useState} from "react";
-import {auth, db} from "../firebaseSetup";
+import { useEffect, useState } from "react";
+import { auth, db } from "../firebaseSetup";
 import {
   createUserWithEmailAndPassword,
-  GoogleAuthProvider,
   signInWithEmailAndPassword,
-  signInWithPopup,
 } from "firebase/auth";
-import {useNavigation} from "@react-navigation/native";
-import {collection, addDoc, setDoc, doc} from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
+import { setDoc, doc } from "firebase/firestore";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -50,14 +47,15 @@ function Login() {
           {
             name: "Album1",
             size: 20,
-            photosTake: 0,
+            photosTaken: 0,
             isFilmFull: false,
             path: `user_${newEmail}/albums/`,
             photos: [{}],
           },
         ],
+        currFilm: 0,
       };
-      const user = await setDoc(userDoc, userData, {merge: true});
+      const user = await setDoc(userDoc, userData, { merge: true });
     } catch (e) {
       console.error("Error adding document: ", e);
     }

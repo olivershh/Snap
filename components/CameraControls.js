@@ -1,17 +1,30 @@
 import { useState } from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import Button from "./Button";
-import { storage, auth } from "../firebaseSetup";
+import { storage, auth, db } from "../firebaseSetup";
 import { ref, uploadBytes } from "firebase/storage";
 import Film from "./Film";
 import * as ImageManipulator from "expo-image-manipulator";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function CameraControls({ cameraRef, setImage, image }) {
-  const [film, setFilm] = useState({
-    name: "Album 1",
-    photosTaken: 0,
-    size: 20,
-  });
+  const [film, setFilm] = useState({});
+  const getCurrFilm = async () => {
+    const email = auth.currentUser?.email;
+    const docRef = doc(db, "users", email);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const userAlbums = docSnap.data().albums;
+      const currFilm = docSnap.data().currFilm;
+      console.log("Document data:", userAlbums[currFilm]);
+      setFilm(userAlbums[currFilm]);
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  };
+  console.log(film);
   const takePicture = async () => {
     if (cameraRef) {
       try {
