@@ -11,8 +11,7 @@ export default function CameraScreen() {
 
   return (
     <ImageBackground
-      source={require("../cork.jpeg")}
-      style={{ padding: 15, backgroundColor: "gray", flex: 1 }}
+      style={{ padding: 15, backgroundColor: "lightgray", flex: 1 }}
     >
       <View style={{ padding: 15, backgroundColor: "white" }}>
         {!image ? (
