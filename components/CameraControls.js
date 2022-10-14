@@ -1,30 +1,41 @@
-import { useState } from "react";
-import { View } from "react-native";
+import {useEffect, useState} from "react";
+import {View} from "react-native";
 import Button from "./Button";
-import { storage, auth, db } from "../firebaseSetup";
-import { ref, uploadBytes } from "firebase/storage";
+import {storage, auth, db} from "../firebaseSetup";
+import {ref, uploadBytes} from "firebase/storage";
 import Film from "./Film";
 import * as ImageManipulator from "expo-image-manipulator";
-import { doc, getDoc } from "firebase/firestore";
+import {doc, getDoc, updateDoc} from "firebase/firestore";
 
-export default function CameraControls({ cameraRef, setImage, image }) {
-  const [film, setFilm] = useState({});
+export default function CameraControls({cameraRef, setImage, image}) {
+  const [film, setFilm] = useState({photosTaken: 0});
+  const [path, setPath] = useState("");
+  const email = auth.currentUser?.email;
+  const docRef = doc(db, "users", email);
+
   const getCurrFilm = async () => {
-    const email = auth.currentUser?.email;
-    const docRef = doc(db, "users", email);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       const userAlbums = docSnap.data().albums;
       const currFilm = docSnap.data().currFilm;
-      console.log("Document data:", userAlbums[currFilm]);
       setFilm(userAlbums[currFilm]);
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
     }
   };
-  console.log(film);
+  useEffect(() => {
+    getCurrFilm();
+  }, []);
+
+  useEffect(() => {
+    if (film.path && film.name) {
+      setPath(`${film.path + film.name}/${film.photosTaken}`);
+      console.log(path, " <<< path");
+    }
+  }, [film.photosTaken]);
+
   const takePicture = async () => {
     if (cameraRef) {
       try {
@@ -39,29 +50,37 @@ export default function CameraControls({ cameraRef, setImage, image }) {
               },
             },
           ],
-          { compress: 1, format: ImageManipulator.SaveFormat.PNG }
+          {compress: 1, format: ImageManipulator.SaveFormat.PNG}
         );
         setImage(crop.uri);
-        setFilm((currFilm) => {
-          const newFilm = { ...currFilm };
-          newFilm.photosTaken = currFilm.photosTaken + 1;
-          return newFilm;
-        });
+
         console.log(
           "in the process: ",
-          `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+          `${film.path + film.name}/${film.photosTaken}`
         );
         const imageRef = ref(
           storage,
-          `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+          `${film.path + film.name}/${film.photosTaken}`
         );
         const img = await fetch(crop.uri);
         const bytes = await img.blob();
         await uploadBytes(imageRef, bytes);
         console.log(
           "photo uploaded: ",
-          `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+          `${film.path + film.name}/${film.photosTaken}`
         );
+        film.photos.push({
+          date: Date.now(),
+        });
+        await updateDoc(docRef, {
+          "albums[0].photosTaken": film.photosTaken + 1,
+          "albums[0].photos": film.photos,
+        });
+        setFilm((currFilm) => {
+          const newFilm = {...currFilm};
+          newFilm.photosTaken = currFilm.photosTaken + 1;
+          return newFilm;
+        });
       } catch (e) {
         console.log(e);
       }
@@ -74,7 +93,7 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
   return (
     <View
-      style={{ backgroundColor: "white", flex: 1, marginTop: 20, padding: 15 }}
+      style={{backgroundColor: "white", flex: 1, marginTop: 20, padding: 15}}
     >
       <Film film={film} />
 
