@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import Button from "./Button";
 import { storage, auth } from "../firebaseSetup";
 import { ref, uploadBytes } from "firebase/storage";
@@ -12,9 +12,18 @@ export default function CameraControls({ cameraRef, setImage, image }) {
     photosTaken: 0,
     size: 20,
   });
+
   const takePicture = async () => {
+    console.log("in takepic function");
+
+    if (film.photosTaken === film.size) {
+      console.log("MAX REACHED");
+      return;
+    }
+
     if (cameraRef) {
       try {
+        console.log("in camera ref");
         const data = await cameraRef.current.takePictureAsync();
         const crop = await ImageManipulator.manipulateAsync(
           data.uri,
@@ -61,25 +70,50 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
   return (
     <View
-      style={{ backgroundColor: "white", flex: 1, marginTop: 20, padding: 15 }}
+      style={{
+        backgroundColor: "white",
+        flex: 1,
+        marginTop: 20,
+        padding: 15,
+        flex: 1,
+        flexDirection: "row",
+      }}
     >
-      <Film film={film} />
+      <View
+        style={[
+          styles.cameraButtonsContainer,
+          { backgroundColor: "gold", marginRight: 15 },
+        ]}
+      >
+        <Film film={film} />
+      </View>
 
-      {!image ? (
-        <Button
-          title="Take a picture"
-          icon="camera"
-          onPress={takePicture}
-          color="blue"
-        />
-      ) : (
-        <Button
-          title="Return to camera"
-          icon="retweet"
-          onPress={resetImage}
-          color="blue"
-        />
-      )}
+      <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
+        {!image ? (
+          <Button
+            title="Take a picture"
+            icon="camera"
+            onPress={takePicture}
+            color="blue"
+          />
+        ) : (
+          <Button
+            title="Return to camera"
+            icon="retweet"
+            onPress={resetImage}
+            color="blue"
+          />
+        )}
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  cameraButtonsContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+  },
+});
