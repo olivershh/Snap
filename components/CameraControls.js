@@ -5,7 +5,7 @@ import { storage, auth } from "../firebaseSetup";
 import { ref, uploadBytes } from "firebase/storage";
 import Film from "./Film";
 import * as ImageManipulator from "expo-image-manipulator";
-
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
 export default function CameraControls({ cameraRef, setImage, image }) {
   const [film, setFilm] = useState({
     name: "Album 1",
@@ -90,19 +90,17 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
       <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
         {!image ? (
-          <Button
-            title="Take a picture"
-            icon="camera"
+          <MaterialIcons
+            name="photo-camera"
+            size={60}
+            color="black"
             onPress={takePicture}
-            color="blue"
           />
         ) : (
-          <Button
-            title="Return to camera"
-            icon="retweet"
-            onPress={resetImage}
-            color="blue"
-          />
+          <>
+            <Entypo name="back" size={24} color="black" onPress={resetImage} />
+            <Text>Back to camera</Text>
+          </>
         )}
       </View>
     </View>
