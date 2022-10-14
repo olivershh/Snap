@@ -17,7 +17,11 @@ export default function App() {
     return (
       <Tab.Navigator screenOptions={{ headerShown: true }}>
         <Tab.Screen name="Camera" component={CameraScreen} />
-        <Tab.Screen name="AlbumStack" component={AlbumStack} />
+        <Tab.Screen
+          name="AlbumStack"
+          component={AlbumStack}
+          options={{ headerShown: false }}
+        />
         <Tab.Screen name="Profile" children={() => <Profile />} />
         <Tab.Screen name="tree" children={() => <GenerateTreeTest />} />
         {/* <Tab.Screen name="TempSingle" component={SinglePhotoScreen} /> */}

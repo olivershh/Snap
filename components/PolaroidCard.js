@@ -1,16 +1,11 @@
 import { View, Image, Text, StyleSheet, SafeAreaView } from "react-native";
 
-export default function PolaroidCard(
-  { image, caption, date },
-  randomizeAngle = false
-) {
+export default function PolaroidCard({ image, caption, date }) {
   function randomRotation() {
     return Math.random() * 8 - 4 + "deg";
   }
 
   const rotation = randomRotation();
-
-  console.log(rotation);
 
   return (
     <View

@@ -24,7 +24,6 @@ export default AlbumStack = ({ navigation }) => {
                 <Text>+</Text>
               </TouchableOpacity>
             ),
-            headerShown: false,
           }}
         />
         <Stack.Screen
