@@ -10,7 +10,7 @@ export default function CameraControls({ cameraRef, setImage, image }) {
   const [film, setFilm] = useState({
     name: "Album 1",
     photosTaken: 0,
-    size: 2,
+    size: 20,
   });
 
   const takePicture = async () => {
@@ -24,19 +24,19 @@ export default function CameraControls({ cameraRef, setImage, image }) {
     if (cameraRef) {
       try {
         console.log("in camera ref");
-        const data = await cameraRef.current.takePictureAsync();
-        const crop = await ImageManipulator.manipulateAsync(
-          data.uri,
-          [
-            {
-              resize: {
-                width: 2000,
-                height: 2000,
-              },
-            },
-          ],
-          { compress: 1, format: ImageManipulator.SaveFormat.PNG }
-        );
+        const crop = await cameraRef.current.takePictureAsync();
+        // const crop = await ImageManipulator.manipulateAsync(
+        //   data.uri,
+        //   [
+        //     {
+        //       resize: {
+        //         width: 2000,
+        //         height: 2000,
+        //       },
+        //     },
+        //   ],
+        //   { compress: 1, format: ImageManipulator.SaveFormat.PNG }
+        // );
         setImage(crop.uri);
         setFilm((currFilm) => {
           const newFilm = { ...currFilm };
