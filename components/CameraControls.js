@@ -1,14 +1,14 @@
-import {useEffect, useState} from "react";
-import {View} from "react-native";
+import { useEffect, useState } from "react";
+import { View } from "react-native";
 import Button from "./Button";
-import {storage, auth, db} from "../firebaseSetup";
-import {ref, uploadBytes} from "firebase/storage";
+import { storage, auth, db } from "../firebaseSetup";
+import { ref, uploadBytes } from "firebase/storage";
 import Film from "./Film";
 import * as ImageManipulator from "expo-image-manipulator";
-import {doc, getDoc, updateDoc} from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
-export default function CameraControls({cameraRef, setImage, image}) {
-  const [film, setFilm] = useState({photosTaken: 0});
+export default function CameraControls({ cameraRef, setImage, image }) {
+  const [film, setFilm] = useState(null);
   const [path, setPath] = useState("");
   const email = auth.currentUser?.email;
   const docRef = doc(db, "users", email);
@@ -30,13 +30,17 @@ export default function CameraControls({cameraRef, setImage, image}) {
   }, []);
 
   useEffect(() => {
-    if (film.path && film.name) {
-      setPath(`${film.path + film.name}/${film.photosTaken}`);
-      console.log(path, " <<< path");
+    if (film) {
+      console.log("updated database");
+      console.log(film);
+      updateDoc(docRef, {
+        "albums.0": film,
+      });
     }
-  }, [film.photosTaken]);
+  }, [film]);
 
   const takePicture = async () => {
+    console.log("pressed");
     if (cameraRef) {
       try {
         const data = await cameraRef.current.takePictureAsync();
@@ -50,7 +54,7 @@ export default function CameraControls({cameraRef, setImage, image}) {
               },
             },
           ],
-          {compress: 1, format: ImageManipulator.SaveFormat.PNG}
+          { compress: 1, format: ImageManipulator.SaveFormat.PNG }
         );
         setImage(crop.uri);
 
@@ -69,16 +73,12 @@ export default function CameraControls({cameraRef, setImage, image}) {
           "photo uploaded: ",
           `${film.path + film.name}/${film.photosTaken}`
         );
-        film.photos.push({
-          date: Date.now(),
-        });
-        await updateDoc(docRef, {
-          "albums[0].photosTaken": film.photosTaken + 1,
-          "albums[0].photos": film.photos,
-        });
+
         setFilm((currFilm) => {
-          const newFilm = {...currFilm};
+          const newFilm = { ...currFilm };
+          newFilm.photos.push({ date: Date.now() });
           newFilm.photosTaken = currFilm.photosTaken + 1;
+          console.log(newFilm);
           return newFilm;
         });
       } catch (e) {
@@ -93,9 +93,11 @@ export default function CameraControls({cameraRef, setImage, image}) {
 
   return (
     <View
-      style={{backgroundColor: "white", flex: 1, marginTop: 20, padding: 15}}
+      style={{ backgroundColor: "white", flex: 1, marginTop: 20, padding: 15 }}
     >
-      <Film film={film} />
+      <Film
+        film={film ? film : { photosTaken: 0, size: 20, name: "album_1" }}
+      />
 
       {!image ? (
         <Button
