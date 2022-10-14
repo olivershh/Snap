@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Text } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
 import { AlbumProvider } from "../context/AlbumContext";
 import AddAlbum from "../screens/AddAlbum";
 import Album from "../screens/Album";
