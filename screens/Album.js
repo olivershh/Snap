@@ -1,4 +1,10 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
 import PolaroidCard from "../components/PolaroidCard";
 
@@ -36,13 +42,16 @@ const Album = () => {
   }
 
   return (
-    <View>
+    <ImageBackground
+      source={require("../cork.jpeg")}
+      style={{ backgroundColor: "gray", flex: 1 }}
+    >
       <FlatList
         data={fakePicObjects}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
-    </View>
+    </ImageBackground>
   );
 };
 
