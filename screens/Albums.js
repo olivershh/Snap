@@ -22,7 +22,7 @@ export default function Albums() {
       const returnArray = [];
 
       Object.keys(userAlbums).map((albumIndex) => {
-        returnArray.push(userAlbums[albumIndex]);
+        returnArray.push([userAlbums[albumIndex], albumIndex]);
       });
 
       setAlbums(returnArray);
@@ -50,7 +50,11 @@ export default function Albums() {
             return a.isFilmFull - b.isFilmFull;
           })
           .map((album) => (
-            <AlbumCard album={album} key={album.name} />
+            <AlbumCard
+              album={album[0]}
+              albumNumber={album[1]}
+              key={album[0].name}
+            />
           ))}
       </View>
     </ScrollView>
