@@ -1,21 +1,26 @@
 import { Button, StyleSheet, Text } from "react-native";
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const AlbumCard = ({ album }) => {
   const navigation = useNavigation();
+  const isDeveloped = album.isFilmFull;
+  console.log(isDeveloped);
 
   // Unsure why the touchable opacity does not work on android, so added a button.
   return (
     <TouchableOpacity
-      style={styles.card}
-      onPress={() => navigation.navigate("Album")}
+      style={[styles.card, !isDeveloped && { backgroundColor: "red" }]}
+      onPress={
+        isDeveloped
+          ? () => navigation.navigate("Album", { album })
+          : () => {
+              alert("Film must be complete before its viewable");
+            }
+      }
     >
       <Text style={styles.name}>{album.name}</Text>
-      <Button onPress={() => navigation.navigate("Album")} title="Open">
-        Go to album
-      </Button>
     </TouchableOpacity>
   );
 };
