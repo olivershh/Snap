@@ -46,7 +46,7 @@ function Login() {
         albums: [
           {
             name: "Album1",
-            size: 6,
+            size: 2,
             photosTaken: 0,
             isFilmFull: false,
             path: `user_${newEmail}/albums/`,

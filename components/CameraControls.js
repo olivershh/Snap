@@ -92,7 +92,9 @@ export default function CameraControls({ cameraRef, setImage, image }) {
             newFilm.photos.push({ date: Date.now() });
             newFilm.photosTaken = currFilm.photosTaken + 1;
             newFilm.photos[film.photos.length - 1].URL = url;
-
+            if (newFilm.photosTaken === newFilm.size) {
+              newFilm.isFilmFull = true;
+            }
             return newFilm;
           });
         });
@@ -134,7 +136,13 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           { backgroundColor: "gold", marginRight: 15 },
         ]}
       >
-        <Film film={film ? film : { name: "", size: 0, photosTaken: 0 }} />
+        <Film
+          film={
+            film
+              ? film
+              : { name: "", size: 0, photosTaken: 0, isFilmFull: false }
+          }
+        />
       </View>
 
       <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
