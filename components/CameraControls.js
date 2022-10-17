@@ -17,8 +17,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
   const docRef = doc(db, "users", email);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [currentUploads, setCurrentUploads] = useState([]);
-
   const getCurrFilm = async () => {
     const docSnap = await getDoc(docRef);
 
@@ -50,28 +48,16 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       });
   }, [film]);
 
-  useEffect(() => {
-    const imageRef = ref(
-      storage,
-      `${film.path + film.name}/${film.photosTaken}`
-    );
-    let crop = currentUploads;
-
-    fetch(crop.uri)
-      .then((img) => {
-        return img.blob();
-      })
-      .then((bytes) => {
-        return uploadBytes(imageRef, bytes);
-      })
+  const uploadPhoto = async (crop, imageRef) => {
+    const img = await fetch(crop.uri);
+    const bytes = await img.blob();
+    uploadBytes(imageRef, bytes)
       .then(() => {
-        setImage(crop.uri);
         console.log(
           "photo uploaded: ",
           `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
         );
 
-        setIsLoading(false);
         return getDownloadURL(
           ref(storage, `user_${email}/albums/${film.name}/${film.photosTaken}`)
         );
@@ -81,14 +67,18 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           const newFilm = { ...currFilm };
           newFilm.photos.push({ date: Date.now(), URL: url });
           newFilm.photosTaken = currFilm.photosTaken + 1;
+
           return newFilm;
         });
-      })
-      .catch((e) => {
         setIsLoading(false);
-        console.log(e);
+      })
+      .then(() => {
+        resetImage();
+      })
+      .catch((err) => {
+        console.log(err);
       });
-  }, [currentUploads]);
+  };
 
   const takePicture = async () => {
     console.log("in takepic function");
@@ -99,22 +89,28 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       try {
         console.log("in camera ref");
         const data = await cameraRef.current.takePictureAsync();
-        const crop = await ImageManipulator.manipulateAsync(
-          data.uri,
-          [
-            {
-              resize: {
-                width: 600,
-                height: 600,
-              },
+        setImage("../fakeImage.jpeg");
+        const crop = await ImageManipulator.manipulateAsync(data.uri, [
+          {
+            resize: {
+              width: 800,
+              height: 800,
             },
-          ]
-          // { compress: 1, format: ImageManipulator.SaveFormat.PNG }
+          },
+        ]);
+        console.log(crop);
+        await setImage(crop.uri);
+
+        const imageRef = ref(
+          storage,
+          `${film.path + film.name}/${film.photosTaken}`
         );
-        let newUploadList = [...currentUploads];
-        newUploadList = newUploadList.push(crop);
-        setCurrentUploads(...currentUploads.push(crop));
+
+        uploadPhoto(crop, imageRef);
+
+        //insert function here
       } catch (e) {
+        setIsLoading(false);
         console.log(e);
       }
     }
@@ -145,22 +141,15 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       </View>
 
       <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
-        {!image ? (
-          isLoading ? (
-            <Text>This is loading</Text>
-          ) : (
-            <MaterialIcons
-              name="photo-camera"
-              size={60}
-              color="black"
-              onPress={takePicture}
-            />
-          )
+        {isLoading ? (
+          <Text>This is loading</Text>
         ) : (
-          <>
-            <Entypo name="back" size={24} color="black" onPress={resetImage} />
-            <Text>Back to camera</Text>
-          </>
+          <MaterialIcons
+            name="photo-camera"
+            size={60}
+            color="black"
+            onPress={takePicture}
+          />
         )}
       </View>
     </View>
