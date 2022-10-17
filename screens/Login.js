@@ -26,9 +26,12 @@ function Login() {
   const isFocused = useIsFocused();
 
   useEffect(() => {
+    // signOut(auth);
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         navigation.navigate("Home");
+      } else {
+        console.log("not logged in");
       }
     });
     return unsubscribe;
