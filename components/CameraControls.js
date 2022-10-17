@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { View } from "react-native";
 import Button from "./Button";
 import { storage, auth, db } from "../firebaseSetup";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Film from "./Film";
 import * as ImageManipulator from "expo-image-manipulator";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -17,6 +17,7 @@ export default function CameraControls({ cameraRef, setImage, image }) {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
+      ///
       const userAlbums = docSnap.data().albums;
       const currFilm = docSnap.data().currFilm;
       setFilm(userAlbums[currFilm]);
@@ -31,16 +32,23 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
   useEffect(() => {
     if (film) {
-      console.log("updated database");
-      console.log(film);
-      updateDoc(docRef, {
-        "albums.0": film,
+      getDownloadURL(
+        ref(
+          storage,
+          `user_${email}/albums/${film.name}/${film.photos.length - 1}`
+        )
+      ).then((url) => {
+        console.log("updated database");
+
+        film.photos[film.photos.length - 1].URL = url;
+        updateDoc(docRef, {
+          "albums.0": film,
+        });
       });
     }
   }, [film]);
 
   const takePicture = async () => {
-    console.log("pressed");
     if (cameraRef) {
       try {
         const data = await cameraRef.current.takePictureAsync();
@@ -78,7 +86,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           const newFilm = { ...currFilm };
           newFilm.photos.push({ date: Date.now() });
           newFilm.photosTaken = currFilm.photosTaken + 1;
-          console.log(newFilm);
           return newFilm;
         });
       } catch (e) {
