@@ -1,19 +1,58 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import { View, Text, StyleSheet } from "react-native";
+
 import Button from "./Button";
-import { storage, auth } from "../firebaseSetup";
-import { ref, uploadBytes } from "firebase/storage";
+import { storage, auth, db } from "../firebaseSetup";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Film from "./Film";
 import * as ImageManipulator from "expo-image-manipulator";
-import { MaterialIcons, Entypo } from "@expo/vector-icons";
-export default function CameraControls({ cameraRef, setImage, image }) {
-  const [film, setFilm] = useState({
-    name: "Album 1",
-    photosTaken: 0,
-    size: 20,
-  });
 
-  const [isLoading, setIsLoading] = useState(false);
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+
+export default function CameraControls({ cameraRef, setImage, image }) {
+  const [film, setFilm] = useState(null);
+  // const [path, setPath] = useState("");
+  const email = auth.currentUser?.email;
+  const docRef = doc(db, "users", email);
+ const [isLoading, setIsLoading] = useState(false);
+
+  const getCurrFilm = async () => {
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      ///
+      const userAlbums = docSnap.data().albums;
+      const currFilm = docSnap.data().currFilm;
+      setFilm(userAlbums[currFilm]);
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  };
+  useEffect(() => {
+    getCurrFilm();
+  }, []);
+
+  useEffect(() => {
+    if (film) {
+      getDownloadURL(
+        ref(
+          storage,
+          `user_${email}/albums/${film.name}/${film.photos.length - 1}`
+        )
+      ).then((url) => {
+        console.log("updated database");
+
+        film.photos[film.photos.length - 1].URL = url;
+        updateDoc(docRef, {
+          "albums.0": film,
+        });
+      });
+    }
+  }, [film]);
+
 
   const takePicture = async () => {
     console.log("in takepic function");
@@ -41,27 +80,34 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           ],
           { compress: 1, format: ImageManipulator.SaveFormat.PNG }
         );
-        setFilm((currFilm) => {
-          const newFilm = { ...currFilm };
-          newFilm.photosTaken = currFilm.photosTaken + 1;
-          return newFilm;
-        });
-        console.log(
-          "in the process: ",
-          `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
-        );
+
+        
         const imageRef = ref(
           storage,
-          `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+          `${film.path + film.name}/${film.photosTaken}`
         );
         const img = await fetch(crop.uri);
         const bytes = await img.blob();
+
+        
+// may need to check this
+        setFilm((currFilm) => {
+          const newFilm = { ...currFilm };
+          newFilm.photos.push({ date: Date.now() });
+          newFilm.photosTaken = currFilm.photosTaken + 1;
+          return newFilm;
+          });
+          
+
         uploadBytes(imageRef, bytes).then(() => {
           setImage(crop.uri);
           console.log(
             "photo uploaded: ",
             `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
           );
+          
+          
+          
           setIsLoading(false);
         });
       } catch (e) {
@@ -86,6 +132,7 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         flexDirection: "row",
       }}
     >
+
       <View
         style={[
           styles.cameraButtonsContainer,
