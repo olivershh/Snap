@@ -17,6 +17,8 @@ export default function CameraControls({ cameraRef, setImage, image }) {
   const docRef = doc(db, "users", email);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [currentUploads, setCurrentUploads] = useState([]);
+
   const getCurrFilm = async () => {
     const docSnap = await getDoc(docRef);
 
@@ -48,6 +50,46 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       });
   }, [film]);
 
+  useEffect(() => {
+    const imageRef = ref(
+      storage,
+      `${film.path + film.name}/${film.photosTaken}`
+    );
+    let crop = currentUploads;
+
+    fetch(crop.uri)
+      .then((img) => {
+        return img.blob();
+      })
+      .then((bytes) => {
+        return uploadBytes(imageRef, bytes);
+      })
+      .then(() => {
+        setImage(crop.uri);
+        console.log(
+          "photo uploaded: ",
+          `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+        );
+
+        setIsLoading(false);
+        return getDownloadURL(
+          ref(storage, `user_${email}/albums/${film.name}/${film.photosTaken}`)
+        );
+      })
+      .then((url) => {
+        setFilm((currFilm) => {
+          const newFilm = { ...currFilm };
+          newFilm.photos.push({ date: Date.now(), URL: url });
+          newFilm.photosTaken = currFilm.photosTaken + 1;
+          return newFilm;
+        });
+      })
+      .catch((e) => {
+        setIsLoading(false);
+        console.log(e);
+      });
+  }, [currentUploads]);
+
   const takePicture = async () => {
     console.log("in takepic function");
 
@@ -69,40 +111,10 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           ]
           // { compress: 1, format: ImageManipulator.SaveFormat.PNG }
         );
-
-        const imageRef = ref(
-          storage,
-          `${film.path + film.name}/${film.photosTaken}`
-        );
-        const img = await fetch(crop.uri);
-        const bytes = await img.blob();
-        uploadBytes(imageRef, bytes)
-          .then(() => {
-            setImage(crop.uri);
-            console.log(
-              "photo uploaded: ",
-              `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
-            );
-
-            setIsLoading(false);
-            return getDownloadURL(
-              ref(
-                storage,
-                `user_${email}/albums/${film.name}/${film.photosTaken}`
-              )
-            );
-          })
-          .then((url) => {
-            setFilm((currFilm) => {
-              const newFilm = { ...currFilm };
-              newFilm.photos.push({ date: Date.now(), URL: url });
-              newFilm.photosTaken = currFilm.photosTaken + 1;
-
-              return newFilm;
-            });
-          });
+        let newUploadList = [...currentUploads];
+        newUploadList = newUploadList.push(crop);
+        setCurrentUploads(...currentUploads.push(crop));
       } catch (e) {
-        setIsLoading(false);
         console.log(e);
       }
     }
