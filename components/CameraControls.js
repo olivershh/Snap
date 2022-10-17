@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import { View, Text, StyleSheet } from "react-native";
@@ -16,7 +15,7 @@ export default function CameraControls({ cameraRef, setImage, image }) {
   // const [path, setPath] = useState("");
   const email = auth.currentUser?.email;
   const docRef = doc(db, "users", email);
- const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getCurrFilm = async () => {
     const docSnap = await getDoc(docRef);
@@ -42,17 +41,20 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           storage,
           `user_${email}/albums/${film.name}/${film.photos.length - 1}`
         )
-      ).then((url) => {
-        console.log("updated database");
+      )
+        .then((url) => {
+          console.log("updated database");
 
-        film.photos[film.photos.length - 1].URL = url;
-        updateDoc(docRef, {
-          "albums.0": film,
+          film.photos[film.photos.length - 1].URL = url;
+          updateDoc(docRef, {
+            "albums.0": film,
+          });
+        })
+        .catch((err) => {
+          alert(err);
         });
-      });
     }
   }, [film]);
-
 
   const takePicture = async () => {
     console.log("in takepic function");
@@ -81,7 +83,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           { compress: 1, format: ImageManipulator.SaveFormat.PNG }
         );
 
-        
         const imageRef = ref(
           storage,
           `${film.path + film.name}/${film.photosTaken}`
@@ -89,15 +90,13 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         const img = await fetch(crop.uri);
         const bytes = await img.blob();
 
-        
-// may need to check this
+        // may need to check this
         setFilm((currFilm) => {
           const newFilm = { ...currFilm };
           newFilm.photos.push({ date: Date.now() });
           newFilm.photosTaken = currFilm.photosTaken + 1;
           return newFilm;
-          });
-          
+        });
 
         uploadBytes(imageRef, bytes).then(() => {
           setImage(crop.uri);
@@ -105,9 +104,7 @@ export default function CameraControls({ cameraRef, setImage, image }) {
             "photo uploaded: ",
             `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
           );
-          
-          
-          
+
           setIsLoading(false);
         });
       } catch (e) {
@@ -132,14 +129,13 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         flexDirection: "row",
       }}
     >
-
       <View
         style={[
           styles.cameraButtonsContainer,
           { backgroundColor: "gold", marginRight: 15 },
         ]}
       >
-        <Film film={film} />
+        <Film film={film ? film : { name: "", size: 0, photosTaken: 0 }} />
       </View>
 
       <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
