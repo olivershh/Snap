@@ -53,11 +53,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
     setIsLoading(true);
 
-    if (film.photosTaken === film.size) {
-      console.log("MAX REACHED");
-      return;
-    }
-
     if (cameraRef) {
       try {
         console.log("in camera ref");
@@ -67,12 +62,12 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           [
             {
               resize: {
-                width: 2000,
-                height: 2000,
+                width: 600,
+                height: 600,
               },
             },
-          ],
-          { compress: 1, format: ImageManipulator.SaveFormat.PNG }
+          ]
+          // { compress: 1, format: ImageManipulator.SaveFormat.PNG }
         );
 
         const imageRef = ref(
@@ -81,31 +76,31 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         );
         const img = await fetch(crop.uri);
         const bytes = await img.blob();
-        getDownloadURL(
-          ref(
-            storage,
-            `user_${email}/albums/${film.name}/${film.photosTaken - 1}`
-          )
-        ).then((url) => {
-          setFilm((currFilm) => {
-            const newFilm = { ...currFilm };
-            newFilm.photos.push({ date: Date.now() });
-            newFilm.photosTaken = currFilm.photosTaken + 1;
-            newFilm.photos[film.photos.length - 1].URL = url;
+        uploadBytes(imageRef, bytes)
+          .then(() => {
+            setImage(crop.uri);
+            console.log(
+              "photo uploaded: ",
+              `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+            );
 
-            return newFilm;
+            setIsLoading(false);
+            return getDownloadURL(
+              ref(
+                storage,
+                `user_${email}/albums/${film.name}/${film.photosTaken}`
+              )
+            );
+          })
+          .then((url) => {
+            setFilm((currFilm) => {
+              const newFilm = { ...currFilm };
+              newFilm.photos.push({ date: Date.now(), URL: url });
+              newFilm.photosTaken = currFilm.photosTaken + 1;
+
+              return newFilm;
+            });
           });
-        });
-
-        uploadBytes(imageRef, bytes).then(() => {
-          setImage(crop.uri);
-          console.log(
-            "photo uploaded: ",
-            `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
-          );
-
-          setIsLoading(false);
-        });
       } catch (e) {
         setIsLoading(false);
         console.log(e);
