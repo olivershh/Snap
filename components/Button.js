@@ -1,11 +1,13 @@
 import * as React from "react";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function Button({ title, onPress, icon, color }) {
+export default function Button({ title, onPress, icon, color, size }) {
+  if (!size) size = 28;
+
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Entypo name={icon} size={28} color={color ? color : "#f1f1f1"} />
+      <Entypo name={icon} size={size} color={color ? color : "#f1f1f1"} />
       <Text style={[styles.text, { color: color }]}>{title}</Text>
     </TouchableOpacity>
   );

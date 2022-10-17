@@ -1,17 +1,22 @@
+
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
+import { View, Text, StyleSheet } from "react-native";
+
 import Button from "./Button";
 import { storage, auth, db } from "../firebaseSetup";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Film from "./Film";
 import * as ImageManipulator from "expo-image-manipulator";
+
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 export default function CameraControls({ cameraRef, setImage, image }) {
   const [film, setFilm] = useState(null);
-  const [path, setPath] = useState("");
+  // const [path, setPath] = useState("");
   const email = auth.currentUser?.email;
   const docRef = doc(db, "users", email);
+ const [isLoading, setIsLoading] = useState(false);
 
   const getCurrFilm = async () => {
     const docSnap = await getDoc(docRef);
@@ -48,9 +53,20 @@ export default function CameraControls({ cameraRef, setImage, image }) {
     }
   }, [film]);
 
+
   const takePicture = async () => {
+    console.log("in takepic function");
+
+    setIsLoading(true);
+
+    if (film.photosTaken === film.size) {
+      console.log("MAX REACHED");
+      return;
+    }
+
     if (cameraRef) {
       try {
+        console.log("in camera ref");
         const data = await cameraRef.current.takePictureAsync();
         const crop = await ImageManipulator.manipulateAsync(
           data.uri,
@@ -64,31 +80,38 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           ],
           { compress: 1, format: ImageManipulator.SaveFormat.PNG }
         );
-        setImage(crop.uri);
 
-        console.log(
-          "in the process: ",
-          `${film.path + film.name}/${film.photosTaken}`
-        );
+        
         const imageRef = ref(
           storage,
           `${film.path + film.name}/${film.photosTaken}`
         );
         const img = await fetch(crop.uri);
         const bytes = await img.blob();
-        await uploadBytes(imageRef, bytes);
-        console.log(
-          "photo uploaded: ",
-          `${film.path + film.name}/${film.photosTaken}`
-        );
 
+        
+// may need to check this
         setFilm((currFilm) => {
           const newFilm = { ...currFilm };
           newFilm.photos.push({ date: Date.now() });
           newFilm.photosTaken = currFilm.photosTaken + 1;
           return newFilm;
+          });
+          
+
+        uploadBytes(imageRef, bytes).then(() => {
+          setImage(crop.uri);
+          console.log(
+            "photo uploaded: ",
+            `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+          );
+          
+          
+          
+          setIsLoading(false);
         });
       } catch (e) {
+        setIsLoading(false);
         console.log(e);
       }
     }
@@ -100,27 +123,53 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
   return (
     <View
-      style={{ backgroundColor: "white", flex: 1, marginTop: 20, padding: 15 }}
+      style={{
+        backgroundColor: "white",
+        flex: 1,
+        marginTop: 20,
+        padding: 15,
+        flex: 1,
+        flexDirection: "row",
+      }}
     >
-      <Film
-        film={film ? film : { photosTaken: 0, size: 20, name: "album_1" }}
-      />
 
-      {!image ? (
-        <Button
-          title="Take a picture"
-          icon="camera"
-          onPress={takePicture}
-          color="blue"
-        />
-      ) : (
-        <Button
-          title="Return to camera"
-          icon="retweet"
-          onPress={resetImage}
-          color="blue"
-        />
-      )}
+      <View
+        style={[
+          styles.cameraButtonsContainer,
+          { backgroundColor: "gold", marginRight: 15 },
+        ]}
+      >
+        <Film film={film} />
+      </View>
+
+      <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
+        {!image ? (
+          isLoading ? (
+            <Text>This is loading</Text>
+          ) : (
+            <MaterialIcons
+              name="photo-camera"
+              size={60}
+              color="black"
+              onPress={takePicture}
+            />
+          )
+        ) : (
+          <>
+            <Entypo name="back" size={24} color="black" onPress={resetImage} />
+            <Text>Back to camera</Text>
+          </>
+        )}
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  cameraButtonsContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+  },
+});

@@ -1,17 +1,18 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Text } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
 import { AlbumProvider } from "../context/AlbumContext";
 import AddAlbum from "../screens/AddAlbum";
 import Album from "../screens/Album";
 import Albums from "../screens/Albums";
+import { Entypo } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 
 export default AlbumStack = ({ navigation }) => {
   return (
     <AlbumProvider>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator>
         <Stack.Screen
           name="Albums"
           component={Albums}
@@ -25,7 +26,11 @@ export default AlbumStack = ({ navigation }) => {
             ),
           }}
         />
-        <Stack.Screen name="Album" component={Album} />
+        <Stack.Screen
+          name="Album"
+          component={Album}
+          options={{ headerTransparent: false }}
+        />
         <Stack.Screen name="Add Album" component={AddAlbum} />
       </Stack.Navigator>
     </AlbumProvider>

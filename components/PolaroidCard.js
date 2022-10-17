@@ -1,21 +1,25 @@
 import { View, Image, Text, StyleSheet, SafeAreaView } from "react-native";
 
-export default function PolaroidCard() {
+export default function PolaroidCard({ image, caption, date }) {
   function randomRotation() {
-    return Math.random() * 10 - 5 + "deg";
+    return Math.random() * 8 - 4 + "deg";
   }
 
+  const rotation = randomRotation();
+
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { transform: [{ rotateX: rotation }, { rotateZ: rotation }] },
+      ]}
+    >
       <View style={styles.imageContainer}>
-        <Image
-          source={require("../fakeImage.jpeg")}
-          style={styles.image}
-        ></Image>
+        <Image source={image} style={styles.image}></Image>
       </View>
       <View style={styles.textContainer}>
-        <Text>"Caption would go here! Probably change the font"</Text>
-        <Text>-20/12/21</Text>
+        <Text>{caption}</Text>
+        <Text>{`- ${date}`}</Text>
       </View>
     </View>
   );

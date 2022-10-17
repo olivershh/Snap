@@ -7,6 +7,7 @@ import Profile from "./screens/Profile";
 import AlbumStack from "./stacks/AlbumStack";
 import CameraScreen from "./screens/CameraScreen";
 import SinglePhotoScreen from "./screens/SinglePhotoScreen";
+import GenerateTreeTest from "./screens/GenerateTreeTest";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -16,16 +17,21 @@ export default function App() {
     return (
       <Tab.Navigator screenOptions={{ headerShown: true }}>
         <Tab.Screen name="Camera" component={CameraScreen} />
-        <Tab.Screen name="AlbumStack" component={AlbumStack} />
+        <Tab.Screen
+          name="AlbumStack"
+          component={AlbumStack}
+          options={{ headerShown: false }}
+        />
         <Tab.Screen name="Profile" children={() => <Profile />} />
-        <Tab.Screen name="TempSingle" component={SinglePhotoScreen} />
+        <Tab.Screen name="tree" children={() => <GenerateTreeTest />} />
+        {/* <Tab.Screen name="TempSingle" component={SinglePhotoScreen} /> */}
       </Tab.Navigator>
     );
   };
 
   return (
     <NavigationContainer style={{ flex: 1 }}>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen
           options={{ headerShown: false }}
           name="Login"
