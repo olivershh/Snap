@@ -8,11 +8,10 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Film from "./Film";
 import * as ImageManipulator from "expo-image-manipulator";
 
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
 export default function CameraControls({ cameraRef, setImage, image }) {
   const [film, setFilm] = useState(null);
-  const [path, setPath] = useState("");
   const email = auth.currentUser?.email;
   const docRef = doc(db, "users", email);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +23,11 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       ///
       const userAlbums = docSnap.data().albums;
       const currFilm = docSnap.data().currFilm;
-      setFilm(userAlbums[currFilm]);
+      setFilm(() => {
+        const newFilm = userAlbums[currFilm];
+        newFilm.index = currFilm;
+        return newFilm;
+      });
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
@@ -36,8 +39,13 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
   useEffect(() => {
     if (!film) return;
+    const photosTakenProp = `albums.${film.index}.photosTaken`;
+    const photosProp = `albums.${film.index}.photos`;
+    const isFilmFullProp = `albums.${film.index}.isFilmFull`;
     updateDoc(docRef, {
-      "albums.0": film,
+      [photosTakenProp]: film.photosTaken,
+      [photosProp]: arrayUnion(film.photos[film.photos.length - 1]),
+      [isFilmFullProp]: film.isFilmFull,
     })
       .then(() => {
         console.log("updated database");
@@ -53,11 +61,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
     setIsLoading(true);
 
-    if (film.photosTaken === film.size) {
-      console.log("MAX REACHED");
-      return;
-    }
-
     if (cameraRef) {
       try {
         console.log("in camera ref");
@@ -67,12 +70,12 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           [
             {
               resize: {
-                width: 2000,
-                height: 2000,
+                width: 600,
+                height: 600,
               },
             },
-          ],
-          { compress: 1, format: ImageManipulator.SaveFormat.PNG }
+          ]
+          // { compress: 1, format: ImageManipulator.SaveFormat.PNG }
         );
 
         const imageRef = ref(
@@ -81,33 +84,34 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         );
         const img = await fetch(crop.uri);
         const bytes = await img.blob();
-        getDownloadURL(
-          ref(
-            storage,
-            `user_${email}/albums/${film.name}/${film.photosTaken - 1}`
-          )
-        ).then((url) => {
-          setFilm((currFilm) => {
-            const newFilm = { ...currFilm };
-            newFilm.photos.push({ date: Date.now() });
-            newFilm.photosTaken = currFilm.photosTaken + 1;
-            newFilm.photos[film.photos.length - 1].URL = url;
-            if (newFilm.photosTaken === newFilm.size) {
-              newFilm.isFilmFull = true;
-            }
-            return newFilm;
+        uploadBytes(imageRef, bytes)
+          .then(() => {
+            setImage(crop.uri);
+            console.log(
+              "photo uploaded: ",
+              `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+            );
+
+            setIsLoading(false);
+            return getDownloadURL(
+              ref(
+                storage,
+                `user_${email}/albums/${film.name}/${film.photosTaken}`
+              )
+            );
+          })
+          .then((url) => {
+            setFilm((currFilm) => {
+              const newFilm = { ...currFilm };
+              newFilm.photos.push({ date: Date.now(), URL: url });
+              newFilm.photosTaken = currFilm.photosTaken + 1;
+              if (newFilm.photosTaken >= newFilm.size) {
+                newFilm.isFilmFull = true;
+              }
+
+              return newFilm;
+            });
           });
-        });
-
-        uploadBytes(imageRef, bytes).then(() => {
-          setImage(crop.uri);
-          console.log(
-            "photo uploaded: ",
-            `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
-          );
-
-          setIsLoading(false);
-        });
       } catch (e) {
         setIsLoading(false);
         console.log(e);

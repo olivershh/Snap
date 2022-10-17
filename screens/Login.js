@@ -43,17 +43,25 @@ function Login() {
       console.log("registered with: ", newEmail);
       const userDoc = doc(db, `users/${newEmail}`);
       const userData = {
-        albums: [
-          {
+        albums: {
+          0: {
             name: "Album1",
+            size: 2,
+            photosTaken: 0,
+            isFilmFull: false,
+            path: `user_${newEmail}/albums/`,
+            photos: [{ date: Date.now(), URL: "" }],
+          },
+          1: {
+            name: "Album2",
             size: 2,
             photosTaken: 0,
             isFilmFull: false,
             path: `user_${newEmail}/albums/`,
             photos: [],
           },
-        ],
-        currFilm: 0,
+        },
+        currFilm: 1,
       };
       const user = await setDoc(userDoc, userData, { merge: true });
     } catch (e) {
