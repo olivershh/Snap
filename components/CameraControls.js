@@ -12,7 +12,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 export default function CameraControls({ cameraRef, setImage, image }) {
   const [film, setFilm] = useState(null);
-  // const [path, setPath] = useState("");
+  const [path, setPath] = useState("");
   const email = auth.currentUser?.email;
   const docRef = doc(db, "users", email);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,25 +35,17 @@ export default function CameraControls({ cameraRef, setImage, image }) {
   }, []);
 
   useEffect(() => {
-    if (film) {
-      getDownloadURL(
-        ref(
-          storage,
-          `user_${email}/albums/${film.name}/${film.photos.length - 1}`
-        )
-      )
-        .then((url) => {
-          console.log("updated database");
-
-          film.photos[film.photos.length - 1].URL = url;
-          updateDoc(docRef, {
-            "albums.0": film,
-          });
-        })
-        .catch((err) => {
-          alert(err);
-        });
-    }
+    if (!film) return;
+    updateDoc(docRef, {
+      "albums.0": film,
+    })
+      .then(() => {
+        console.log("updated database");
+      })
+      .catch((err) => {
+        alert(err);
+        console.log(err);
+      });
   }, [film]);
 
   const takePicture = async () => {
@@ -89,13 +81,20 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         );
         const img = await fetch(crop.uri);
         const bytes = await img.blob();
+        getDownloadURL(
+          ref(
+            storage,
+            `user_${email}/albums/${film.name}/${film.photosTaken - 1}`
+          )
+        ).then((url) => {
+          setFilm((currFilm) => {
+            const newFilm = { ...currFilm };
+            newFilm.photos.push({ date: Date.now() });
+            newFilm.photosTaken = currFilm.photosTaken + 1;
+            newFilm.photos[film.photos.length - 1].URL = url;
 
-        // may need to check this
-        setFilm((currFilm) => {
-          const newFilm = { ...currFilm };
-          newFilm.photos.push({ date: Date.now() });
-          newFilm.photosTaken = currFilm.photosTaken + 1;
-          return newFilm;
+            return newFilm;
+          });
         });
 
         uploadBytes(imageRef, bytes).then(() => {
