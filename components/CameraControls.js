@@ -41,7 +41,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           ],
           { compress: 1, format: ImageManipulator.SaveFormat.PNG }
         );
-        setImage(crop.uri);
         setFilm((currFilm) => {
           const newFilm = { ...currFilm };
           newFilm.photosTaken = currFilm.photosTaken + 1;
@@ -58,6 +57,7 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         const img = await fetch(crop.uri);
         const bytes = await img.blob();
         uploadBytes(imageRef, bytes).then(() => {
+          setImage(crop.uri);
           console.log(
             "photo uploaded: ",
             `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
