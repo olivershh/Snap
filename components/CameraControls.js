@@ -13,8 +13,12 @@ export default function CameraControls({ cameraRef, setImage, image }) {
     size: 20,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const takePicture = async () => {
     console.log("in takepic function");
+
+    setIsLoading(true);
 
     if (film.photosTaken === film.size) {
       console.log("MAX REACHED");
@@ -53,12 +57,15 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         );
         const img = await fetch(crop.uri);
         const bytes = await img.blob();
-        await uploadBytes(imageRef, bytes);
-        console.log(
-          "photo uploaded: ",
-          `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
-        );
+        uploadBytes(imageRef, bytes).then(() => {
+          console.log(
+            "photo uploaded: ",
+            `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+          );
+          setIsLoading(false);
+        });
       } catch (e) {
+        setIsLoading(false);
         console.log(e);
       }
     }
@@ -90,12 +97,16 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
       <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
         {!image ? (
-          <MaterialIcons
-            name="photo-camera"
-            size={60}
-            color="black"
-            onPress={takePicture}
-          />
+          isLoading ? (
+            <Text>This is loading</Text>
+          ) : (
+            <MaterialIcons
+              name="photo-camera"
+              size={60}
+              color="black"
+              onPress={takePicture}
+            />
+          )
         ) : (
           <>
             <Entypo name="back" size={24} color="black" onPress={resetImage} />
