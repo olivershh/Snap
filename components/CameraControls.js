@@ -72,9 +72,9 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         });
         setIsLoading(false);
       })
-      .then(() => {
-        resetImage();
-      })
+      // .then(() => {
+      //   resetImage();
+      // })
       .catch((err) => {
         console.log(err);
       });
@@ -142,14 +142,19 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
       <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
         {isLoading ? (
-          <Text>This is loading</Text>
-        ) : (
+          <Text>Taking photo...</Text>
+        ) : !image ? (
           <MaterialIcons
             name="photo-camera"
             size={60}
             color="black"
             onPress={takePicture}
           />
+        ) : (
+          <>
+            <Entypo name="back" size={24} color="black" onPress={resetImage} />
+            <Text>Back to camera</Text>
+          </>
         )}
       </View>
     </View>
