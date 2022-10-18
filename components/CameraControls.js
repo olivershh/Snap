@@ -48,6 +48,38 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       });
   }, [film]);
 
+  const uploadPhoto = async (crop, imageRef) => {
+    const img = await fetch(crop.uri);
+    const bytes = await img.blob();
+    uploadBytes(imageRef, bytes)
+      .then(() => {
+        console.log(
+          "photo uploaded: ",
+          `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+        );
+
+        return getDownloadURL(
+          ref(storage, `user_${email}/albums/${film.name}/${film.photosTaken}`)
+        );
+      })
+      .then((url) => {
+        setFilm((currFilm) => {
+          const newFilm = { ...currFilm };
+          newFilm.photos.push({ date: Date.now(), URL: url });
+          newFilm.photosTaken = currFilm.photosTaken + 1;
+
+          return newFilm;
+        });
+        setIsLoading(false);
+      })
+      // .then(() => {
+      //   resetImage();
+      // })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const takePicture = async () => {
     console.log("in takepic function");
 
@@ -57,50 +89,26 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       try {
         console.log("in camera ref");
         const data = await cameraRef.current.takePictureAsync();
-        const crop = await ImageManipulator.manipulateAsync(
-          data.uri,
-          [
-            {
-              resize: {
-                width: 600,
-                height: 600,
-              },
+        setImage("../fakeImage.jpeg");
+        const crop = await ImageManipulator.manipulateAsync(data.uri, [
+          {
+            resize: {
+              width: 600,
+              height: 600,
             },
-          ]
-          // { compress: 1, format: ImageManipulator.SaveFormat.PNG }
-        );
+          },
+        ]);
+        console.log(crop);
+        await setImage(crop.uri);
 
         const imageRef = ref(
           storage,
           `${film.path + film.name}/${film.photosTaken}`
         );
-        const img = await fetch(crop.uri);
-        const bytes = await img.blob();
-        uploadBytes(imageRef, bytes)
-          .then(() => {
-            setImage(crop.uri);
-            console.log(
-              "photo uploaded: ",
-              `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
-            );
 
-            setIsLoading(false);
-            return getDownloadURL(
-              ref(
-                storage,
-                `user_${email}/albums/${film.name}/${film.photosTaken}`
-              )
-            );
-          })
-          .then((url) => {
-            setFilm((currFilm) => {
-              const newFilm = { ...currFilm };
-              newFilm.photos.push({ date: Date.now(), URL: url });
-              newFilm.photosTaken = currFilm.photosTaken + 1;
+        uploadPhoto(crop, imageRef);
 
-              return newFilm;
-            });
-          });
+        //insert function here
       } catch (e) {
         setIsLoading(false);
         console.log(e);
@@ -133,17 +141,15 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       </View>
 
       <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
-        {!image ? (
-          isLoading ? (
-            <Text>This is loading</Text>
-          ) : (
-            <MaterialIcons
-              name="photo-camera"
-              size={60}
-              color="black"
-              onPress={takePicture}
-            />
-          )
+        {isLoading ? (
+          <Text>Taking photo...</Text>
+        ) : !image ? (
+          <MaterialIcons
+            name="photo-camera"
+            size={60}
+            color="black"
+            onPress={takePicture}
+          />
         ) : (
           <>
             <Entypo name="back" size={24} color="black" onPress={resetImage} />
