@@ -8,11 +8,10 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Film from "./Film";
 import * as ImageManipulator from "expo-image-manipulator";
 
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
 export default function CameraControls({ cameraRef, setImage, image }) {
   const [film, setFilm] = useState(null);
-  const [path, setPath] = useState("");
   const email = auth.currentUser?.email;
   const docRef = doc(db, "users", email);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,12 +20,14 @@ export default function CameraControls({ cameraRef, setImage, image }) {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      ///
       const userAlbums = docSnap.data().albums;
       const currFilm = docSnap.data().currFilm;
-      setFilm(userAlbums[currFilm]);
+      setFilm(() => {
+        const newFilm = userAlbums[currFilm];
+        newFilm.index = currFilm;
+        return newFilm;
+      });
     } else {
-      // doc.data() will be undefined in this case
       console.log("No such document!");
     }
   };
@@ -34,19 +35,23 @@ export default function CameraControls({ cameraRef, setImage, image }) {
     getCurrFilm();
   }, []);
 
-  useEffect(() => {
+  const updateDbWhenPhotoTaken = async (film) => {
     if (!film) return;
-    updateDoc(docRef, {
-      "albums.0": film,
-    })
-      .then(() => {
-        console.log("updated database");
-      })
-      .catch((err) => {
-        alert(err);
-        console.log(err);
+    const photosTakenProp = `albums.${film.index}.photosTaken`;
+    const photosProp = `albums.${film.index}.photos`;
+    const isFilmFullProp = `albums.${film.index}.isFilmFull`;
+    try {
+      await updateDoc(docRef, {
+        [photosTakenProp]: film.photosTaken,
+        [photosProp]: arrayUnion(film.photos[film.photos.length - 1]),
+        [isFilmFullProp]: film.isFilmFull,
       });
-  }, [film]);
+      console.log("updated database");
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  };
 
   const uploadPhoto = async (crop, imageRef) => {
     const img = await fetch(crop.uri);
@@ -82,6 +87,10 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
   const takePicture = async () => {
     console.log("in takepic function");
+    if (film.isFilmFull) {
+      alert("Change film before taking more photos");
+      return;
+    }
 
     setIsLoading(true);
 
@@ -98,7 +107,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
             },
           },
         ]);
-        console.log(crop);
         await setImage(crop.uri);
 
         const imageRef = ref(
@@ -106,9 +114,38 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           `${film.path + film.name}/${film.photosTaken}`
         );
 
-        uploadPhoto(crop, imageRef);
+        const img = await fetch(crop.uri);
+        const bytes = await img.blob();
+        uploadBytes(imageRef, bytes)
+          .then(() => {
+            setImage(crop.uri);
+            console.log(
+              "photo uploaded: ",
+              `/user_${auth.currentUser?.email}/albums/${film.name}/${film.photosTaken}`
+            );
 
-        //insert function here
+            setIsLoading(false);
+            return getDownloadURL(
+              ref(
+                storage,
+                `user_${email}/albums/${film.name}/${film.photosTaken}`
+              )
+            );
+          })
+          .then((url) => {
+            const newFilm = { ...film };
+            newFilm.photos.push({ date: Date.now(), URL: url });
+            newFilm.photosTaken = film.photosTaken + 1;
+            if (newFilm.photosTaken >= newFilm.size) {
+              newFilm.isFilmFull = true;
+            }
+            updateDbWhenPhotoTaken(newFilm);
+
+            setFilm(newFilm);
+          });
+
+        //uploadPhoto(crop, imageRef);
+
       } catch (e) {
         setIsLoading(false);
         console.log(e);
@@ -137,7 +174,16 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           { backgroundColor: "gold", marginRight: 15 },
         ]}
       >
-        <Film film={film ? film : { name: "", size: 0, photosTaken: 0 }} />
+        <Film
+          email={email}
+          docRef={docRef}
+          setFilm={setFilm}
+          film={
+            film
+              ? film
+              : { name: "", size: 0, photosTaken: 0, isFilmFull: false }
+          }
+        />
       </View>
 
       <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
