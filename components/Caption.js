@@ -7,25 +7,6 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [text, setText] = useState("");
-
-  async function handleCommentSubmit() {
-    photoObj.caption = text;
-    setIsEditing(false);
-
-    const email = await auth.currentUser?.email;
-    const docRef = await doc(db, "users", email);
-    const docSnap = await getDoc(docRef);
-    const docSnapData = await docSnap.data();
-
-    docSnapData.albums[albumNumber].photos[index].caption = text;
-
-    try {
-      updateDoc(docRef, docSnapData);
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   function CaptionBox() {
     return photoObj.caption ? (
@@ -44,9 +25,26 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
   }
 
   function EditBox() {
-    function onTextChange(newText) {
-      setText(newText);
+    const [text, setText] = useState("");
+
+    async function handleCommentSubmit() {
+      photoObj.caption = text;
+      setIsEditing(false);
+
+      const email = await auth.currentUser?.email;
+      const docRef = await doc(db, "users", email);
+      const docSnap = await getDoc(docRef);
+      const docSnapData = await docSnap.data();
+
+      docSnapData.albums[albumNumber].photos[index].caption = text;
+
+      try {
+        updateDoc(docRef, docSnapData);
+      } catch (e) {
+        console.log(e);
+      }
     }
+
     return (
       <View>
         <TextInput
