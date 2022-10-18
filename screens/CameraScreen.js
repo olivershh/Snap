@@ -11,20 +11,26 @@ export default function CameraScreen() {
 
   return (
     <ImageBackground
-      source={require("../cork.jpeg")}
+      source={require("../silverbackground2-overlay.png")}
       style={{
         padding: 15,
         backgroundColor: "lightgray",
         flex: 1,
       }}
     >
-      <View style={{ padding: 15, backgroundColor: "white" }}>
+      <ImageBackground
+        source={require("../silverbackground2.jpg")}
+        style={{
+          padding: 15, backgroundColor: "white", borderStyle: "solid",
+          borderColor: "black",
+          borderWidth: 2,
+        }}>
         {!image ? (
           <CameraView cameraRef={cameraRef} />
         ) : (
           <CameraImageTaken image={image} />
         )}
-      </View>
+      </ImageBackground>
 
       <CameraControls cameraRef={cameraRef} setImage={setImage} image={image} />
     </ImageBackground>

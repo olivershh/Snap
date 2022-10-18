@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ImageBackground } from "react-native";
 
 import { storage, auth, db } from "../firebaseSetup";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -157,15 +157,21 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
   return (
     <View
+
       style={{
         flex: 1,
       }}
     >
-      <View
+      <ImageBackground
+        source={require("../silverbackground2.jpg")}
+
         style={{
+          borderStyle: "solid",
+          borderColor: "black",
+          borderWidth: 2,
           backgroundColor: "white",
           flex: 1,
-          paddingBottom: 15,
+          padding: 15,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
@@ -193,12 +199,12 @@ export default function CameraControls({ cameraRef, setImage, image }) {
             </>
           )}
         </View>
-      </View>
+      </ImageBackground>
 
-      <View
+      <ImageBackground
+        source={require("../filmreel.jpg")}
         style={[
           styles.filmButtonsContainer,
-          { backgroundColor: "white", opacity: 0.85 },
         ]}
       >
         <Film
@@ -211,8 +217,8 @@ export default function CameraControls({ cameraRef, setImage, image }) {
               : { name: "", size: 0, photosTaken: 0, isFilmFull: false }
           }
         />
-      </View>
-    </View>
+      </ImageBackground>
+    </View >
   );
 }
 
@@ -232,6 +238,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 100,
     height: "100%",
+    backgroundColor: "silver"
     // alignSelf: "flex-end"
   },
 });
