@@ -93,8 +93,8 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         const crop = await ImageManipulator.manipulateAsync(data.uri, [
           {
             resize: {
-              width: 800,
-              height: 800,
+              width: 600,
+              height: 600,
             },
           },
         ]);
