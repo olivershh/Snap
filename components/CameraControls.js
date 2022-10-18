@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import { View, Text, StyleSheet } from "react-native";
 
-import Button from "./Button";
 import { storage, auth, db } from "../firebaseSetup";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Film from "./Film";
@@ -145,7 +144,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           });
 
         //uploadPhoto(crop, imageRef);
-
       } catch (e) {
         setIsLoading(false);
         console.log(e);
@@ -158,20 +156,21 @@ export default function CameraControls({ cameraRef, setImage, image }) {
   };
 
   return (
-    <View style={{
-      flex: 1
-    }}>
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
       <View
         style={{
           backgroundColor: "white",
           flex: 1,
-          padding: 15,
+          paddingBottom: 15,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
-          marginBottom: 15
-        }
-        }
+          marginBottom: 15,
+        }}
       >
         <View style={[styles.cameraButtonsContainer]}>
           {isLoading ? (
@@ -179,24 +178,27 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           ) : !image ? (
             <MaterialIcons
               name="photo-camera"
-              size={60}
+              size={45}
               color="black"
               onPress={takePicture}
             />
           ) : (
             <>
-              <Entypo name="back" size={24} color="black" onPress={resetImage} />
-              <Text>Back to camera</Text>
+              <Entypo
+                name="back"
+                size={24}
+                color="black"
+                onPress={resetImage}
+              />
             </>
           )}
         </View>
-      </ View>
-
+      </View>
 
       <View
         style={[
           styles.filmButtonsContainer,
-          { backgroundColor: "gold" },
+          { backgroundColor: "white", opacity: 0.85 },
         ]}
       >
         <Film
@@ -209,7 +211,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
               : { name: "", size: 0, photosTaken: 0, isFilmFull: false }
           }
         />
-
       </View>
     </View>
   );
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderRadius: 50,
     width: 100,
-    height: 100,
+    height: "100%",
     // alignSelf: "flex-end"
   },
 });
