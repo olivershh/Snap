@@ -19,7 +19,7 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
 
   function CaptionBox() {
     return photoObj.caption ? (
-      <Text style={{ fontFamily: "RockSalt", fontSize: 16 }}>
+      <Text style={{ fontFamily: "RockSalt", fontSize: 14 }}>
         {photoObj.caption}
       </Text>
     ) : (
@@ -71,9 +71,10 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
             flex: 1,
             backgroundColor: "ghostwhite",
             fontFamily: "RockSalt",
-            fontSize: 16,
+            fontSize: 14,
             textAlign: "center",
           }}
+          maxLength={35}
           onChangeText={(newText) => setText(newText)}
           value={text}
           onSubmitEditing={handleCommentSubmit}
