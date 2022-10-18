@@ -3,10 +3,11 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const AlbumCard = ({ album }) => {
+const AlbumCard = ({ album, albumNumber }) => {
   const navigation = useNavigation();
   const isDeveloped = album.isFilmFull;
-  console.log(isDeveloped);
+
+  album.albumNumber = albumNumber;
 
   // Unsure why the touchable opacity does not work on android, so added a button.
   return (
@@ -14,7 +15,10 @@ const AlbumCard = ({ album }) => {
       style={[styles.card, !isDeveloped && { backgroundColor: "red" }]}
       onPress={
         isDeveloped
-          ? () => navigation.navigate("Album", { album })
+          ? () =>
+              navigation.navigate("Album", {
+                album: { ...album },
+              })
           : () => {
               alert("Film must be complete before its viewable");
             }

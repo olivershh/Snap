@@ -11,10 +11,22 @@ import PolaroidCard from "../components/PolaroidCard";
 const Album = ({ route, navigation }) => {
   const photosArray = route.params.album.photos;
 
-  console.log(photosArray);
+  const albumName = route.params.album.name;
+  const albumNumber = route.params.album.albumNumber;
 
-  function renderItem({ item }) {
-    return <PolaroidCard url={item.URL} caption="" date={item.date} />;
+  console.log(albumNumber);
+
+  function renderItem({ item, index }) {
+    return (
+      <PolaroidCard
+        photoObj={item}
+        date={item.date}
+        index={index}
+        albumName={albumName}
+        albumNumber={albumNumber}
+        photosArray={photosArray}
+      />
+    );
   }
 
   return (
