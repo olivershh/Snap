@@ -4,20 +4,23 @@ import { Entypo } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import { storage, auth, db } from "../firebaseSetup";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { useFonts } from "expo-font";
 
 const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   function CaptionBox() {
     return photoObj.caption ? (
-      <Text>{photoObj.caption}</Text>
+      <Text style={{ fontFamily: "RockSalt", fontSize: 16, flexWrap: "wrap" }}>
+        {photoObj.caption}
+      </Text>
     ) : (
       <>
-        <Text>Add A comment</Text>
+        <Text style={{ color: "gray" }}>add a caption...</Text>
         <Entypo
           name="new-message"
           size={24}
-          color="black"
+          color="gray"
           onPress={() => setIsEditing(true)}
         />
       </>
@@ -56,10 +59,29 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
     );
   }
 
+  const date = new Date(photoObj.date);
+  const localDate = date.toLocaleDateString("en-US");
+
+  const [loaded] = useFonts({
+    RockSalt: require("../assets/fonts/RockSalt-Regular.ttf"),
+  });
+
+  if (!loaded) {
+    return null;
+  }
+
   return (
-    <View style={{ flex: 1 }}>
-      {isEditing ? <EditBox /> : <CaptionBox />}
-      <Text>{photoObj.date}</Text>
+    <View style={{ alignItems: "center" }}>
+      <View style={{ flex: 1, alignItems: "center" }}>
+        {isEditing ? <EditBox /> : <CaptionBox />}
+      </View>
+      <View
+        style={{
+          margin: 10,
+        }}
+      >
+        <Text>{localDate}</Text>
+      </View>
     </View>
   );
 };
