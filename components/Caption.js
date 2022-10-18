@@ -9,9 +9,17 @@ import { useFonts } from "expo-font";
 const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
   const [isEditing, setIsEditing] = useState(false);
 
+  const [loaded] = useFonts({
+    RockSalt: require("../assets/fonts/RockSalt-Regular.ttf"),
+  });
+
+  if (!loaded) {
+    return null;
+  }
+
   function CaptionBox() {
     return photoObj.caption ? (
-      <Text style={{ fontFamily: "RockSalt", fontSize: 16, flexWrap: "wrap" }}>
+      <Text style={{ fontFamily: "RockSalt", fontSize: 16 }}>
         {photoObj.caption}
       </Text>
     ) : (
@@ -49,12 +57,27 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
     }
 
     return (
-      <View>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "center",
+          marginLeft: 15,
+          marginRight: 15,
+        }}
+      >
         <TextInput
+          style={{
+            flex: 1,
+            backgroundColor: "ghostwhite",
+            fontFamily: "RockSalt",
+            fontSize: 16,
+            textAlign: "center",
+          }}
           onChangeText={(newText) => setText(newText)}
           value={text}
+          onSubmitEditing={handleCommentSubmit}
         ></TextInput>
-        <Button title="submit" onPress={handleCommentSubmit}></Button>
       </View>
     );
   }
@@ -62,17 +85,9 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
   const date = new Date(photoObj.date);
   const localDate = date.toLocaleDateString("en-US");
 
-  const [loaded] = useFonts({
-    RockSalt: require("../assets/fonts/RockSalt-Regular.ttf"),
-  });
-
-  if (!loaded) {
-    return null;
-  }
-
   return (
     <View style={{ alignItems: "center" }}>
-      <View style={{ flex: 1, alignItems: "center" }}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         {isEditing ? <EditBox /> : <CaptionBox />}
       </View>
       <View
