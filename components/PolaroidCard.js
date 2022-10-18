@@ -9,7 +9,12 @@ export default function PolaroidCard({
   albumNumber,
 }) {
   function randomRotation() {
-    return Math.random() * 8 - 4 + "deg";
+    const angle = Math.random() * 4 + "deg";
+
+    if (index % 2) {
+      return angle;
+    }
+    return "-" + angle;
   }
 
   const rotation = randomRotation();
