@@ -1,6 +1,13 @@
-import { View, Image, Text, StyleSheet, SafeAreaView } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
+import Caption from "./Caption";
 
-export default function PolaroidCard({ image, caption, date }) {
+export default function PolaroidCard({
+  photoObj,
+  index,
+  albumName,
+  photosArray,
+  albumNumber,
+}) {
   function randomRotation() {
     return Math.random() * 8 - 4 + "deg";
   }
@@ -15,11 +22,16 @@ export default function PolaroidCard({ image, caption, date }) {
       ]}
     >
       <View style={styles.imageContainer}>
-        <Image source={image} style={styles.image}></Image>
+        <Image source={{ uri: photoObj.URL }} style={styles.image}></Image>
       </View>
       <View style={styles.textContainer}>
-        <Text>{caption}</Text>
-        <Text>{`- ${date}`}</Text>
+        <Caption
+          photoObj={photoObj}
+          index={index}
+          albumName={albumName}
+          photosArray={photosArray}
+          albumNumber={albumNumber}
+        />
       </View>
     </View>
   );
@@ -41,5 +53,5 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     height: 100,
   },
-  image: { width: "100%" },
+  image: { width: "100%", aspectRatio: 1 },
 });

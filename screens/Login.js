@@ -5,15 +5,18 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebaseSetup";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import { setDoc, doc } from "firebase/firestore";
+import { useIsFocused } from "@react-navigation/native";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -21,15 +24,19 @@ function Login() {
 
   const navigation = useNavigation();
 
+  const [error, setError] = useState(null);
+
+  const isFocused = useIsFocused();
+
   useEffect(() => {
+    // signOut(auth);
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         navigation.navigate("Home");
       }
     });
-
     return unsubscribe;
-  }, []);
+  }, [isFocused]);
 
   const handleSignUp = async () => {
     console.log("attempt to sign up");
@@ -38,7 +45,9 @@ function Login() {
         auth,
         email,
         password
-      );
+      ).catch((err) => {
+        alert("Error adding new user: ", err);
+      });
       const newEmail = newUser.user.email;
       console.log("registered with: ", newEmail);
       const userDoc = doc(db, `users/${newEmail}`);
@@ -68,41 +77,68 @@ function Login() {
         const user = userCredentials.user;
         console.log("logged in with: ", user.email);
       })
-      .catch((error) => {
-        alert(error.message);
+      .catch((err) => {
+        console.log(err);
+
+        if (err.code === "auth/invalid-email") {
+          setError("There is no user with this email");
+        } else if (err.code === "auth/user-mismatch") {
+          setError("The username and password do not match");
+        } else {
+          console.log(err);
+          setError(err.code);
+        }
+        Alert.alert("authentication error: ", error);
       });
   };
 
-  return (
-    <KeyboardAvoidingView style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={styles.input}
-          secureTextEntry
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleLogIn} style={styles.button}>
-          <Text style={styles.buttonText}>Log in</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleSignUp}
-          style={[styles.button, styles.buttonOutline]}
-        >
-          <Text style={styles.buttonOutlineText}>Sign up</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
-  );
+  if (!auth.currentUser?.email) {
+    return (
+      <KeyboardAvoidingView style={styles.container}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            style={styles.input}
+            secureTextEntry
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleLogIn} style={styles.button}>
+            <Text style={styles.buttonText}>Log in</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleSignUp}
+            style={[styles.button, styles.buttonOutline]}
+          >
+            <Text style={styles.buttonOutlineText}>Sign up</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
+  // else {
+  //   return (
+  //     <View style={styles.container}>
+  //       <Text>You're already logged in as: {`${auth.currentUser?.email}`}</Text>
+  //       <TouchableOpacity
+  //         onPress={() => {
+  //           navigation.navigate("Home");
+  //         }}
+  //         style={styles.button}
+  //       >
+  //         <Text style={styles.buttonText}>Return to Camera</Text>
+  //       </TouchableOpacity>
+  //     </View>
+  //   );
+  // }
 }
 
 export default Login;
