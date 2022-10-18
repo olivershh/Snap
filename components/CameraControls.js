@@ -158,20 +158,45 @@ export default function CameraControls({ cameraRef, setImage, image }) {
   };
 
   return (
-    <View
-      style={{
-        backgroundColor: "white",
-        flex: 1,
-        marginTop: 20,
-        padding: 15,
-        flex: 1,
-        flexDirection: "row",
-      }}
-    >
+    <View style={{
+      flex: 1
+    }}>
+      <View
+        style={{
+          backgroundColor: "white",
+          flex: 1,
+          padding: 15,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 15
+        }
+        }
+      >
+        <View style={[styles.cameraButtonsContainer]}>
+          {isLoading ? (
+            <Text>Taking photo...</Text>
+          ) : !image ? (
+            <MaterialIcons
+              name="photo-camera"
+              size={60}
+              color="black"
+              onPress={takePicture}
+            />
+          ) : (
+            <>
+              <Entypo name="back" size={24} color="black" onPress={resetImage} />
+              <Text>Back to camera</Text>
+            </>
+          )}
+        </View>
+      </ View>
+
+
       <View
         style={[
-          styles.cameraButtonsContainer,
-          { backgroundColor: "gold", marginRight: 15 },
+          styles.filmButtonsContainer,
+          { backgroundColor: "gold" },
         ]}
       >
         <Film
@@ -184,34 +209,28 @@ export default function CameraControls({ cameraRef, setImage, image }) {
               : { name: "", size: 0, photosTaken: 0, isFilmFull: false }
           }
         />
-      </View>
 
-      <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
-        {isLoading ? (
-          <Text>Taking photo...</Text>
-        ) : !image ? (
-          <MaterialIcons
-            name="photo-camera"
-            size={60}
-            color="black"
-            onPress={takePicture}
-          />
-        ) : (
-          <>
-            <Entypo name="back" size={24} color="black" onPress={resetImage} />
-            <Text>Back to camera</Text>
-          </>
-        )}
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  cameraButtonsContainer: {
-    flex: 1,
+  filmButtonsContainer: {
+    flex: 2,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
+    // width: 100,
+    // height: 200,
+  },
+  cameraButtonsContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 4,
+    borderRadius: 50,
+    width: 100,
+    height: 100,
+    // alignSelf: "flex-end"
   },
 });
