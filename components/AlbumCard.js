@@ -3,6 +3,7 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Svg, { Use, Image } from "react-native-svg";
+import PolaroidStack from "./PolaroidStack";
 
 const AlbumCard = ({ album, albumNumber }) => {
   const navigation = useNavigation();
@@ -14,7 +15,6 @@ const AlbumCard = ({ album, albumNumber }) => {
   return (
     <View style={styles.card}>
       <TouchableOpacity
-        style={{ margin: 15, padding: 15, backgroundColor: "red" }}
         onPress={
           isDeveloped
             ? () =>
@@ -26,6 +26,7 @@ const AlbumCard = ({ album, albumNumber }) => {
               }
         }
       >
+        <PolaroidStack photos={album.photos} />
         <Text style={styles.name}>{album.name}</Text>
       </TouchableOpacity>
     </View>
@@ -40,8 +41,9 @@ const styles = StyleSheet.create({
 
     width: "50%",
     marginVertical: 5,
-    alignContent: "center",
+    alignItems: "center",
     justifyContent: "center",
+    position: "relative",
   },
   // container: {
   //   backgroundColor: "red",
@@ -52,5 +54,8 @@ const styles = StyleSheet.create({
   // },
   name: {
     textAlign: "center",
+    padding: 5,
+    backgroundColor: "white",
+    opacity: 0.7,
   },
 });
