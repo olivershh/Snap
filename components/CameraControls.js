@@ -20,7 +20,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      ///
       const userAlbums = docSnap.data().albums;
       const currFilm = docSnap.data().currFilm;
       setFilm(() => {
@@ -29,7 +28,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         return newFilm;
       });
     } else {
-      // doc.data() will be undefined in this case
       console.log("No such document!");
     }
   };
@@ -37,46 +35,44 @@ export default function CameraControls({ cameraRef, setImage, image }) {
     getCurrFilm();
   }, []);
 
-  useEffect(() => {
+  const updateDbWhenPhotoTaken = async (film) => {
     if (!film) return;
     const photosTakenProp = `albums.${film.index}.photosTaken`;
     const photosProp = `albums.${film.index}.photos`;
     const isFilmFullProp = `albums.${film.index}.isFilmFull`;
-    updateDoc(docRef, {
-      [photosTakenProp]: film.photosTaken,
-      [photosProp]: arrayUnion(film.photos[film.photos.length - 1]),
-      [isFilmFullProp]: film.isFilmFull,
-    })
-      .then(() => {
-        console.log("updated database");
-      })
-      .catch((err) => {
-        alert(err);
-        console.log(err);
+    try {
+      await updateDoc(docRef, {
+        [photosTakenProp]: film.photosTaken,
+        [photosProp]: arrayUnion(film.photos[film.photos.length - 1]),
+        [isFilmFullProp]: film.isFilmFull,
       });
-  }, [film]);
+      console.log("updated database");
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  };
 
   const takePicture = async () => {
     console.log("in takepic function");
-
+    if (film.isFilmFull) {
+      alert("Change film before taking more photos");
+      return;
+    }
     setIsLoading(true);
 
     if (cameraRef) {
       try {
         console.log("in camera ref");
         const data = await cameraRef.current.takePictureAsync();
-        const crop = await ImageManipulator.manipulateAsync(
-          data.uri,
-          [
-            {
-              resize: {
-                width: 600,
-                height: 600,
-              },
+        const crop = await ImageManipulator.manipulateAsync(data.uri, [
+          {
+            resize: {
+              width: 600,
+              height: 600,
             },
-          ]
-          // { compress: 1, format: ImageManipulator.SaveFormat.PNG }
-        );
+          },
+        ]);
 
         const imageRef = ref(
           storage,
@@ -101,16 +97,15 @@ export default function CameraControls({ cameraRef, setImage, image }) {
             );
           })
           .then((url) => {
-            setFilm((currFilm) => {
-              const newFilm = { ...currFilm };
-              newFilm.photos.push({ date: Date.now(), URL: url });
-              newFilm.photosTaken = currFilm.photosTaken + 1;
-              if (newFilm.photosTaken >= newFilm.size) {
-                newFilm.isFilmFull = true;
-              }
+            const newFilm = { ...film };
+            newFilm.photos.push({ date: Date.now(), URL: url });
+            newFilm.photosTaken = film.photosTaken + 1;
+            if (newFilm.photosTaken >= newFilm.size) {
+              newFilm.isFilmFull = true;
+            }
+            updateDbWhenPhotoTaken(newFilm);
 
-              return newFilm;
-            });
+            setFilm(newFilm);
           });
       } catch (e) {
         setIsLoading(false);
@@ -141,6 +136,9 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         ]}
       >
         <Film
+          email={email}
+          docRef={docRef}
+          setFilm={setFilm}
           film={
             film
               ? film

@@ -50,18 +50,10 @@ function Login() {
             photosTaken: 0,
             isFilmFull: false,
             path: `user_${newEmail}/albums/`,
-            photos: [{ date: Date.now(), URL: "" }],
-          },
-          1: {
-            name: "Album2",
-            size: 2,
-            photosTaken: 0,
-            isFilmFull: false,
-            path: `user_${newEmail}/albums/`,
             photos: [],
           },
         },
-        currFilm: 1,
+        currFilm: 0,
       };
       const user = await setDoc(userDoc, userData, { merge: true });
     } catch (e) {
