@@ -29,7 +29,10 @@ export default AlbumStack = ({ navigation }) => {
         <Stack.Screen
           name="Album"
           component={Album}
-          options={{ headerTransparent: false }}
+          options={({ route }) => ({
+            title: route.params.album.name,
+            headerTransparent: false,
+          })}
         />
         {/* <Stack.Screen name="Add Album" component={AddAlbum} /> */}
       </Stack.Navigator>
