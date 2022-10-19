@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -14,12 +14,12 @@ import {
   signOut,
   updatePassword,
 } from "firebase/auth";
-import {auth, db} from "../firebaseSetup";
-import {useNavigation} from "@react-navigation/native";
-import {doc, getDoc} from "firebase/firestore";
+import { auth, db } from "../firebaseSetup";
+import { useNavigation } from "@react-navigation/native";
+import { doc, getDoc } from "firebase/firestore";
 
 function Profile() {
-  const back_img = require("../images/sign_back.jpeg");
+  const back_img = require("../potentialBG/CameraBackground6.jpg");
   const [newPassword, setNewPassword] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
   const [newPassMode, setNewPassMode] = useState(false);
@@ -204,17 +204,15 @@ const styles = StyleSheet.create({
   },
   polaroidContainer: {
     width: "70%",
-    height: "35%",
-    borderWidth: 0.5,
+    height: "50%",
+    borderWidth: 2,
     borderColor: "#254252",
     justifyContent: "center",
-
-    transform: [{rotate: "-5deg"}],
   },
   avatarPhoto: {
-    height: "100%",
+    height: "80%",
     width: "100%",
-    borderWidth: 20,
+    borderWidth: 18,
     borderColor: "white",
   },
   inputContainer: {
@@ -275,6 +273,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
     borderColor: "grey",
     textAlign: "center",
+    height: "20%",
   },
 });
 

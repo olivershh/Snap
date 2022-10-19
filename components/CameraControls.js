@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
-import { View, Text, StyleSheet, ImageBackground, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  ActivityIndicator,
+} from "react-native";
 
 import { storage, auth, db } from "../firebaseSetup";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -158,56 +164,13 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
   return (
     <View
-
       style={{
         flex: 1,
       }}
     >
       <ImageBackground
-        source={require("../black-background.jpg")}
-
-        style={{
-          borderStyle: "solid",
-          borderColor: "black",
-          borderWidth: 2,
-          backgroundColor: "white",
-          flex: 1,
-          padding: 15,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 15,
-        }}
-      >
-        <TouchableOpacity style={[styles.cameraButtonsContainer]}
-          onPress={!image ? takePicture : resetImage}>
-          {isLoading ? (
-            <ActivityIndicator size="small" color="black" />
-          ) : !image ? (
-            <MaterialIcons
-              name="photo-camera"
-              size={45}
-              color="black"
-
-            />
-          ) : (
-            <>
-              <Entypo
-                name="back"
-                size={24}
-                color="black"
-
-              />
-            </>
-          )}
-        </TouchableOpacity>
-      </ImageBackground>
-
-      <ImageBackground
-        source={require("../filmreel.png")}
-        style={[
-          styles.filmButtonsContainer,
-        ]}
+        source={require("../filmreel.jpg")}
+        style={[styles.filmButtonsContainer]}
       >
         <Film
           email={email}
@@ -220,7 +183,37 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           }
         />
       </ImageBackground>
-    </View >
+      <ImageBackground
+        // source={require("../black-background.jpg")}
+        style={{
+          // borderStyle: "solid",
+          // borderColor: "black",
+          // borderWidth: 2,
+          // backgroundColor: ",
+          flex: 1,
+          padding: 15,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 15,
+        }}
+      >
+        <TouchableOpacity
+          style={[styles.cameraButtonsContainer]}
+          onPress={!image ? takePicture : resetImage}
+        >
+          {isLoading ? (
+            <ActivityIndicator size="small" color="black" />
+          ) : !image ? (
+            <MaterialIcons name="photo-camera" size={45} color="black" />
+          ) : (
+            <>
+              <Entypo name="back" size={24} color="black" />
+            </>
+          )}
+        </TouchableOpacity>
+      </ImageBackground>
+    </View>
   );
 }
 
@@ -230,6 +223,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
+    marginTop: 20,
+    marginLeft: -20,
+    marginRight: -20,
     // width: 100,
     // height: 200,
   },
@@ -240,7 +236,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 100,
     height: "100%",
-    backgroundColor: "silver"
+    backgroundColor: "silver",
+
     // alignSelf: "flex-end"
   },
 });

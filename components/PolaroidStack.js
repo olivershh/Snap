@@ -51,13 +51,12 @@ const styles = StyleSheet.create({
     width: 100,
     height: 130,
     backgroundColor: "white",
-    shadowColor: "black",
-    shadowOffset: { width: 10, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+
     marginBottom: 15,
   },
-  imageContainer: { padding: 4 },
+  imageContainer: {
+    padding: 4,
+  },
   textContainer: {
     alignItems: "center",
     justifyContent: "space-evenly",

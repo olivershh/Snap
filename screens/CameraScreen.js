@@ -11,28 +11,44 @@ export default function CameraScreen() {
 
   return (
     <ImageBackground
-      source={require("../backgroundcamera.png")}
+      source={require("../potentialBG/CameraBackground6.jpg")}
+      resizeMode="repeat"
       style={{
         padding: 15,
-        backgroundColor: "lightgray",
+        backgroundColor: "white",
         flex: 1,
       }}
     >
-      <ImageBackground
-        source={require("../orange-background2.jpg")}
+      <View
         style={{
-          padding: 15, backgroundColor: "white", borderStyle: "solid",
-          borderColor: "black",
-          borderWidth: 2,
-        }}>
-        {!image ? (
-          <CameraView cameraRef={cameraRef} />
-        ) : (
-          <CameraImageTaken image={image} />
-        )}
-      </ImageBackground>
+          flex: 1,
+          width: "100%",
+          backgroundColor: "rgba(255, 255, 255, 0.5)",
+        }}
+      >
+        <ImageBackground
+          // source={require("../orange-background2.jpg")}
+          style={{
+            padding: 15,
+            backgroundColor: "white",
+            borderStyle: "solid",
+            borderColor: "black",
+            borderWidth: 2,
+          }}
+        >
+          {!image ? (
+            <CameraView cameraRef={cameraRef} />
+          ) : (
+            <CameraImageTaken image={image} />
+          )}
+        </ImageBackground>
 
-      <CameraControls cameraRef={cameraRef} setImage={setImage} image={image} />
+        <CameraControls
+          cameraRef={cameraRef}
+          setImage={setImage}
+          image={image}
+        />
+      </View>
     </ImageBackground>
   );
 }
