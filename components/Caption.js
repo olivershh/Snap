@@ -10,7 +10,7 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const [loaded] = useFonts({
-    RockSalt: require("../assets/fonts/RockSalt-Regular.ttf"),
+    Handlee: require("../assets/fonts/Handlee-Regular.ttf"),
   });
 
   if (!loaded) {
@@ -19,7 +19,7 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
 
   function CaptionBox() {
     return photoObj.caption ? (
-      <Text style={{ fontFamily: "RockSalt", fontSize: 14 }}>
+      <Text style={{ fontFamily: "Handlee", fontSize: 24 }}>
         {photoObj.caption}
       </Text>
     ) : (
@@ -70,8 +70,8 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
           style={{
             flex: 1,
             backgroundColor: "ghostwhite",
-            fontFamily: "RockSalt",
-            fontSize: 14,
+            fontFamily: "Handlee",
+            fontSize: 24,
             textAlign: "center",
           }}
           maxLength={35}
@@ -96,7 +96,15 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
           margin: 10,
         }}
       >
-        <Text>{localDate}</Text>
+        <Text
+          style={{
+            fontFamily: "Handlee",
+            fontSize: 16,
+            textAlign: "center",
+          }}
+        >
+          {localDate}
+        </Text>
       </View>
     </View>
   );

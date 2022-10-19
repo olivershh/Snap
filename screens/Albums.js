@@ -42,7 +42,7 @@ export default function Albums() {
   return (
     <ScrollView
       contentContainerStyle={styles.container}
-      style={{ backgroundColor: "#fff" }}
+      style={{ backgroundColor: "bisque" }}
     >
       <ImageBackground
         style={styles.albumsList}
@@ -71,6 +71,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    backgroundColor: "bisque",
   },
 });
