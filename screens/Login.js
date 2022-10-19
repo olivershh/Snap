@@ -29,9 +29,7 @@ function Login() {
   const isFocused = useIsFocused();
 
   const back_img = require("../images/sign_back.jpeg");
-  const [avatar, setAvatar] = useState(
-    "https://damagedphotorestoration.com/blog/images/gallery/news_preview2_131.jpg"
-  );
+
   useEffect(() => {
     // signOut(auth);
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -81,7 +79,6 @@ function Login() {
           },
         },
         currFilm: 0,
-        avatarUrl: avatar,
       };
       const user = await setDoc(userDoc, userData, {merge: true});
     } catch (err) {
