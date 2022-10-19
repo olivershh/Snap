@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import {
   Text,
   TouchableOpacity,
@@ -6,21 +6,41 @@ import {
   View,
   TextInput,
   Alert,
+  ImageBackground,
 } from "react-native";
 import {
   reauthenticateWithCredential,
   signOut,
   updatePassword,
 } from "firebase/auth";
-import { auth } from "../firebaseSetup";
-import { useNavigation } from "@react-navigation/native";
+import {auth, db} from "../firebaseSetup";
+import {useNavigation} from "@react-navigation/native";
+import {doc, getDoc} from "firebase/firestore";
 
 function Profile() {
+  const back_img = require("../images/sign_back.jpeg");
   const [newPassword, setNewPassword] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
   const [newPassMode, setNewPassMode] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(null);
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const email = auth.currentUser?.email;
+    const docRef = doc(db, "users", email);
+    getDoc(docRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        setAvatarUrl(() => {
+          const url = docSnap.data().avatarUrl;
+          return {
+            uri: url,
+          };
+        });
+      } else {
+      }
+    });
+  }, []);
 
   const handleSignOut = () => {
     console.log("attempt to sign out");
@@ -65,71 +85,91 @@ function Profile() {
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.infoList}>Email: {auth.currentUser?.email}</Text>
-        <View style={styles.changePassBox}>
-          {newPassMode ? (
-            <View style={styles.inputContainer}>
-              <Text>Set new password</Text>
-              <TextInput
-                placeholder="New Password"
-                value={newPassword}
-                onChangeText={(text) => setNewPassword(text)}
-                style={styles.input}
-                secureTextEntry
-              />
-              <TextInput
-                placeholder="Confirm New Password"
-                value={newPassword2}
-                onChangeText={(text) => setNewPassword2(text)}
-                style={styles.input}
-                secureTextEntry
-              />
-            </View>
-          ) : (
-            <></>
-          )}
-          <View style={styles.buttonContainer}>
-            {!newPassMode ? (
+        <ImageBackground
+          source={back_img}
+          resizeMode="repeat"
+          style={styles.backImage}
+        >
+          <View style={styles.backgoundContainer}>
+            <View style={styles.polaroidContainer}>
+              {avatarUrl ? (
+                <ImageBackground
+                  style={styles.avatarPhoto}
+                  source={avatarUrl}
+                  resizeMode="cover"
+                >
+                  <Text style={styles.infoList}>
+                    Email: {auth.currentUser?.email}
+                  </Text>
+                </ImageBackground>
+              ) : null}
               <TouchableOpacity
-                style={styles.button}
+                style={[styles.button, styles.signOut]}
                 onPress={() => {
-                  handleChangePassMode();
+                  handleSignOut();
                 }}
               >
-                <Text style={styles.buttonText}>Change Password</Text>
+                <Text style={[styles.buttonText, styles.signOutText]}>
+                  Sign Out
+                </Text>
               </TouchableOpacity>
-            ) : (
-              <>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    handleChangingPassword();
-                  }}
-                >
-                  <Text style={styles.buttonText}>Set New Password</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.button, styles.buttonOutline]}
-                  onPress={() => {
-                    handleChangePassMode();
-                  }}
-                >
-                  <Text style={styles.buttonOutlineText}>Cancel</Text>
-                </TouchableOpacity>
-              </>
-            )}
+            </View>
+
+            <View style={styles.changePassBox}>
+              {newPassMode ? (
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    placeholder="New Password"
+                    value={newPassword}
+                    onChangeText={(text) => setNewPassword(text)}
+                    style={styles.input}
+                    secureTextEntry
+                  />
+                  <TextInput
+                    placeholder="Confirm New Password"
+                    value={newPassword2}
+                    onChangeText={(text) => setNewPassword2(text)}
+                    style={styles.input}
+                    secureTextEntry
+                  />
+                </View>
+              ) : (
+                <></>
+              )}
+              <View style={styles.buttonContainer}>
+                {!newPassMode ? (
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      handleChangePassMode();
+                    }}
+                  >
+                    <Text style={styles.buttonText}>Change Password</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        handleChangingPassword();
+                      }}
+                    >
+                      <Text style={styles.buttonText}>Set New Password</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.button, styles.buttonOutline]}
+                      onPress={() => {
+                        handleChangePassMode();
+                      }}
+                    >
+                      <Text style={styles.buttonOutlineText}>Cancel</Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
+            </View>
           </View>
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              handleSignOut();
-            }}
-          >
-            <Text style={styles.buttonText}>Sign Out</Text>
-          </TouchableOpacity>
-        </View>
+        </ImageBackground>
       </View>
     </>
   );
@@ -142,24 +182,53 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
   },
+  backImage: {
+    width: "100%",
+    height: "100%",
+  },
+  backgoundContainer: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  polaroidContainer: {
+    width: "70%",
+    height: "35%",
+    borderWidth: 0.5,
+    borderColor: "grey",
+    justifyContent: "center",
+    transform: [{rotate: "-5deg"}],
+  },
+  avatarPhoto: {
+    height: "100%",
+    // backgroundColor: "rgba(0, 0, 0, 1)",
+    borderWidth: 20,
+    borderColor: "white",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
   inputContainer: {
-    width: "80%",
+    width: "70%",
   },
   input: {
     backgroundColor: "white",
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
+    borderColor: "#254252",
+    borderWidth: 3,
     marginTop: 5,
   },
   buttonContainer: {
-    width: "60%",
+    width: "70%",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 40,
   },
   button: {
-    backgroundColor: "#0782F9",
+    backgroundColor: "#254252",
     width: "100%",
     padding: 15,
     borderRadius: 10,
@@ -168,7 +237,7 @@ const styles = StyleSheet.create({
   buttonOutline: {
     backgroundColor: "white",
     marginTop: 5,
-    borderColor: "#0782F9",
+    borderColor: "red",
     borderWidth: 3,
   },
   buttonText: {
@@ -177,7 +246,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: "#0782F9",
+    color: "#254252",
   },
   changePassBox: {
     width: "100%",
@@ -186,11 +255,18 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   infoList: {
-    fontSize: 20,
-    // textAlign: "left",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-evenly",
+    fontSize: 16,
+    color: "white",
+    padding: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    borderRadius: 10,
+  },
+  signOut: {
+    backgroundColor: "white",
+    borderRadius: 0,
+  },
+  signOutText: {
+    color: "black",
   },
 });
 
