@@ -199,6 +199,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: "grey",
     justifyContent: "center",
+    transform: [{rotate: "-5deg"}],
   },
   avatarPhoto: {
     height: "100%",

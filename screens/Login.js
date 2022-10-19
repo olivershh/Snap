@@ -30,7 +30,9 @@ function Login() {
   const isFocused = useIsFocused();
 
   const back_img = require("../images/sign_back.jpeg");
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState(
+    "https://damagedphotorestoration.com/blog/images/gallery/news_preview2_131.jpg"
+  );
   useEffect(() => {
     // signOut(auth);
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -208,6 +210,7 @@ const styles = StyleSheet.create({
     height: "45%",
     borderWidth: 0.5,
     borderColor: "grey",
+    transform: [{rotate: "-5deg"}],
   },
   avatarPhoto: {
     height: "100%",
