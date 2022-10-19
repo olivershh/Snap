@@ -2,7 +2,6 @@ import { Button, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Svg, { Use, Image } from "react-native-svg";
 import PolaroidStack from "./PolaroidStack";
 
 const AlbumCard = ({ album, albumNumber }) => {
