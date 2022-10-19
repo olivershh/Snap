@@ -6,9 +6,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const ChangeAlbumName = ({ route }) => {
   //   const currentTitle = route.params.album.name;
-  const [tempTitle, setTempTitle] = useState("");
 
   const [currentTitle, setCurrentTitle] = useState(route.params.album.name);
+  const [tempTitle, setTempTitle] = useState(currentTitle);
   const [isEditModeOn, setIsEditModeOn] = useState(false);
 
   console.log(currentTitle);

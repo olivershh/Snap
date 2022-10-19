@@ -25,7 +25,7 @@ const AlbumCard = ({ album, albumNumber }) => {
               }
         }
       >
-        <PolaroidStack photos={album.photos} />
+        <PolaroidStack photos={album.photos} isFilmFull={album.isFilmFull} />
         <Text style={styles.name}>{album.name}</Text>
       </TouchableOpacity>
     </View>

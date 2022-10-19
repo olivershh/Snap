@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 
-export default function PolaroidStack({ photos }) {
+export default function PolaroidStack({ isFilmFull, photos }) {
+  console.log(photos);
   function randomRotation() {
     const angle = Math.random() * 4 + "deg";
 
@@ -30,10 +31,17 @@ export default function PolaroidStack({ photos }) {
 
   return (
     <View>
-      <Image
-        source={require("../spiralalbum.png")}
-        style={{ width: 100, height: 120 }}
-      ></Image>
+      {!isFilmFull ? (
+        <Image
+          source={require("../spiralalbumred.png")}
+          style={{ width: 100, height: 120 }}
+        ></Image>
+      ) : (
+        <Image
+          source={require("../spiralalbumblue.png")}
+          style={{ width: 100, height: 120 }}
+        ></Image>
+      )}
     </View>
   );
 }
