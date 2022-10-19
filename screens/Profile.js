@@ -6,6 +6,7 @@ import {
   View,
   TextInput,
   Alert,
+  Image,
   ImageBackground,
 } from "react-native";
 import {
@@ -32,7 +33,10 @@ function Profile() {
     getDoc(docRef).then((docSnap) => {
       if (docSnap.exists()) {
         setAvatarUrl(() => {
-          const url = docSnap.data().avatarUrl;
+          let url = docSnap.data().avatarUrl;
+          let urlDefault =
+            "https://damagedphotorestoration.com/blog/images/gallery/news_preview2_131.jpg";
+          url = url ? url : urlDefault;
           return {
             uri: url,
           };
@@ -92,27 +96,15 @@ function Profile() {
         >
           <View style={styles.backgoundContainer}>
             <View style={styles.polaroidContainer}>
-              {avatarUrl ? (
-                <ImageBackground
-                  style={styles.avatarPhoto}
-                  source={avatarUrl}
-                  resizeMode="cover"
-                >
-                  <Text style={styles.infoList}>
-                    Email: {auth.currentUser?.email}
-                  </Text>
-                </ImageBackground>
-              ) : null}
-              <TouchableOpacity
-                style={[styles.button, styles.signOut]}
-                onPress={() => {
-                  handleSignOut();
-                }}
-              >
-                <Text style={[styles.buttonText, styles.signOutText]}>
-                  Sign Out
-                </Text>
-              </TouchableOpacity>
+              <Image
+                style={styles.avatarPhoto}
+                source={avatarUrl}
+                resizeMode="cover"
+              ></Image>
+
+              <Text style={styles.emailText}>
+                Email: {auth.currentUser?.email}
+              </Text>
             </View>
 
             <View style={styles.changePassBox}>
@@ -138,14 +130,29 @@ function Profile() {
               )}
               <View style={styles.buttonContainer}>
                 {!newPassMode ? (
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                      handleChangePassMode();
-                    }}
-                  >
-                    <Text style={styles.buttonText}>Change Password</Text>
-                  </TouchableOpacity>
+                  <>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        handleChangePassMode();
+                      }}
+                    >
+                      <Text style={styles.buttonText}>Change Password</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={[styles.button, styles.buttonOutline]}
+                      onPress={() => {
+                        handleSignOut();
+                      }}
+                    >
+                      <Text
+                        style={[styles.buttonText, styles.buttonOutlineText]}
+                      >
+                        Sign Out
+                      </Text>
+                    </TouchableOpacity>
+                  </>
                 ) : (
                   <>
                     <TouchableOpacity
@@ -157,7 +164,12 @@ function Profile() {
                       <Text style={styles.buttonText}>Set New Password</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      style={[styles.button, styles.buttonOutline]}
+                      style={[
+                        styles.button,
+                        styles.buttonOutline,
+                        ,
+                        styles.buttonCancel,
+                      ]}
                       onPress={() => {
                         handleChangePassMode();
                       }}
@@ -178,9 +190,6 @@ function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
-    alignItems: "center",
-    justifyContent: "space-evenly",
   },
   backImage: {
     width: "100%",
@@ -191,23 +200,22 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "rgba(255, 255, 255, 0.5)",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
   },
   polaroidContainer: {
     width: "70%",
     height: "35%",
     borderWidth: 0.5,
-    borderColor: "grey",
+    borderColor: "#254252",
     justifyContent: "center",
+
     transform: [{rotate: "-5deg"}],
   },
   avatarPhoto: {
     height: "100%",
-    // backgroundColor: "rgba(0, 0, 0, 1)",
+    width: "100%",
     borderWidth: 20,
     borderColor: "white",
-    justifyContent: "flex-end",
-    alignItems: "center",
   },
   inputContainer: {
     width: "70%",
@@ -225,18 +233,22 @@ const styles = StyleSheet.create({
     width: "70%",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 40,
+    // marginTop: 40,
   },
   button: {
     backgroundColor: "#254252",
     width: "100%",
+    marginTop: 15,
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
   },
   buttonOutline: {
     backgroundColor: "white",
-    marginTop: 5,
+    borderColor: "#254252",
+    borderWidth: 3,
+  },
+  buttonCancel: {
     borderColor: "red",
     borderWidth: 3,
   },
@@ -247,6 +259,7 @@ const styles = StyleSheet.create({
   },
   buttonOutlineText: {
     color: "#254252",
+    backgroundColor: "white",
   },
   changePassBox: {
     width: "100%",
@@ -254,19 +267,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 15,
   },
-  infoList: {
+  emailText: {
     fontSize: 16,
-    color: "white",
-    padding: 10,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-    borderRadius: 10,
-  },
-  signOut: {
-    backgroundColor: "white",
-    borderRadius: 0,
-  },
-  signOutText: {
     color: "black",
+    padding: 10,
+    backgroundColor: "white",
+    borderBottomWidth: 0.3,
+    borderColor: "grey",
+    textAlign: "center",
   },
 });
 

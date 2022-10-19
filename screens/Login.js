@@ -13,7 +13,6 @@ import {auth, db} from "../firebaseSetup";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut,
 } from "firebase/auth";
 import {useNavigation} from "@react-navigation/native";
 import {setDoc, doc} from "firebase/firestore";
@@ -30,9 +29,7 @@ function Login() {
   const isFocused = useIsFocused();
 
   const back_img = require("../images/sign_back.jpeg");
-  const [avatar, setAvatar] = useState(
-    "https://damagedphotorestoration.com/blog/images/gallery/news_preview2_131.jpg"
-  );
+
   useEffect(() => {
     // signOut(auth);
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -82,7 +79,6 @@ function Login() {
           },
         },
         currFilm: 0,
-        avatarUrl: avatar,
       };
       const user = await setDoc(userDoc, userData, {merge: true});
     } catch (err) {
@@ -116,44 +112,28 @@ function Login() {
           <View style={styles.backgoundContainer}>
             <View style={styles.polaroidContainer}>
               <View style={styles.inputContainer}>
-                <ImageBackground
-                  style={styles.avatarPhoto}
-                  source={{uri: avatar}}
-                  resizeMode="cover"
-                >
-                  <TextInput
-                    placeholder="Email"
-                    placeholderTextColor="white"
-                    value={email}
-                    onChangeText={(text) => {
-                      setEmail(text);
-                      setError(null);
-                    }}
-                    style={styles.input}
-                  />
+                <TextInput
+                  placeholder="Email"
+                  placeholderTextColor="white"
+                  value={email}
+                  onChangeText={(text) => {
+                    setEmail(text);
+                    setError(null);
+                  }}
+                  style={styles.input}
+                />
 
-                  <TextInput
-                    placeholder="Password"
-                    placeholderTextColor="white"
-                    value={password}
-                    onChangeText={(text) => {
-                      setPassword(text);
-                      setError(null);
-                    }}
-                    style={styles.input}
-                    secureTextEntry
-                  />
-                  <TextInput
-                    placeholder="Avatar URL"
-                    placeholderTextColor="white"
-                    value={avatar}
-                    onChangeText={(text) => {
-                      setAvatar(text);
-                      setError(null);
-                    }}
-                    style={styles.input}
-                  />
-                </ImageBackground>
+                <TextInput
+                  placeholder="Password"
+                  placeholderTextColor="white"
+                  value={password}
+                  onChangeText={(text) => {
+                    setPassword(text);
+                    setError(null);
+                  }}
+                  style={styles.input}
+                  secureTextEntry
+                />
               </View>
 
               <View style={styles.buttonContainer}>
@@ -187,21 +167,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: "10%",
+    paddingTop: "15%",
   },
   title: {
-    paddingTop: 30,
     fontSize: 20,
-    fontWeight: "800",
+    fontWeight: "900",
   },
   backImage: {
+    marginTop: 10,
     width: "100%",
     height: "100%",
   },
   backgoundContainer: {
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -210,13 +190,8 @@ const styles = StyleSheet.create({
     height: "45%",
     borderWidth: 0.5,
     borderColor: "grey",
-    transform: [{rotate: "-5deg"}],
   },
-  avatarPhoto: {
-    height: "100%",
-    justifyContent: "center",
-    // alignItems: "center",
-  },
+
   inputContainer: {
     height: "80%",
     backgroundColor: "rgba(0, 0, 0, 1)",
@@ -228,20 +203,15 @@ const styles = StyleSheet.create({
   input: {
     color: "white",
     paddingHorizontal: 15,
-    paddingVertical: 10,
-    color: "white",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    borderRadius: 10,
+    paddingVertical: 15,
   },
   buttonContainer: {
     height: "15%",
-    borderBottomWidth: 0.5,
-    borderColor: "grey",
     marginHorizontal: "auto",
     flexDirection: "row",
+    backgroundColor: "white",
   },
   button: {
-    backgroundColor: "white",
     width: "50%",
     alignItems: "center",
     justifyContent: "center",
@@ -259,7 +229,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    padding: 15,
   },
   errMsgText: {
     color: "red",
