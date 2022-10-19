@@ -32,23 +32,20 @@ export default function Film(props) {
   };
   return (
     <View style={{ alignItems: "center", padding: 10 }}>
-      {/* <Text style={{ fontSize: "14%", fontWeight: "bold" }}>
-        {props.film.name}
-      </Text> */}
       {!props.film.isFilmFull ? (
-        <MaterialCommunityIcons name="film" size={"60%"} color="black" />
+        <MaterialCommunityIcons name="film" size={60} color="black" />
       ) : (
         <>
           <Entypo
             name="circle-with-plus"
-            size={"50%"}
+            size={50}
             color="black"
             onPress={newFilmHandler}
           />
         </>
       )}
 
-      <Text style={{ fontSize: "14%", fontWeight: "bold" }}>
+      <Text style={{ fontSize: 14, fontWeight: "bold" }}>
         {props.film.isFilmFull
           ? `New Film`
           : props.film.photosTaken + "/" + props.film.size}
