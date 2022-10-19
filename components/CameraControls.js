@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ImageBackground } from "react-native";
 
-import Button from "./Button";
 import { storage, auth, db } from "../firebaseSetup";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Film from "./Film";
@@ -145,7 +144,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           });
 
         //uploadPhoto(crop, imageRef);
-
       } catch (e) {
         setIsLoading(false);
         console.log(e);
@@ -159,19 +157,54 @@ export default function CameraControls({ cameraRef, setImage, image }) {
 
   return (
     <View
+
       style={{
-        backgroundColor: "white",
         flex: 1,
-        marginTop: 20,
-        padding: 15,
-        flex: 1,
-        flexDirection: "row",
       }}
     >
-      <View
+      <ImageBackground
+        source={require("../silverbackground2.jpg")}
+
+        style={{
+          borderStyle: "solid",
+          borderColor: "black",
+          borderWidth: 2,
+          backgroundColor: "white",
+          flex: 1,
+          padding: 15,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 15,
+        }}
+      >
+        <View style={[styles.cameraButtonsContainer]}>
+          {isLoading ? (
+            <Text>Taking photo...</Text>
+          ) : !image ? (
+            <MaterialIcons
+              name="photo-camera"
+              size={45}
+              color="black"
+              onPress={takePicture}
+            />
+          ) : (
+            <>
+              <Entypo
+                name="back"
+                size={24}
+                color="black"
+                onPress={resetImage}
+              />
+            </>
+          )}
+        </View>
+      </ImageBackground>
+
+      <ImageBackground
+        source={require("../filmreel.jpg")}
         style={[
-          styles.cameraButtonsContainer,
-          { backgroundColor: "gold", marginRight: 15 },
+          styles.filmButtonsContainer,
         ]}
       >
         <Film
@@ -184,34 +217,28 @@ export default function CameraControls({ cameraRef, setImage, image }) {
               : { name: "", size: 0, photosTaken: 0, isFilmFull: false }
           }
         />
-      </View>
-
-      <View style={[styles.cameraButtonsContainer, { backgroundColor: "red" }]}>
-        {isLoading ? (
-          <Text>Taking photo...</Text>
-        ) : !image ? (
-          <MaterialIcons
-            name="photo-camera"
-            size={60}
-            color="black"
-            onPress={takePicture}
-          />
-        ) : (
-          <>
-            <Entypo name="back" size={24} color="black" onPress={resetImage} />
-            <Text>Back to camera</Text>
-          </>
-        )}
-      </View>
-    </View>
+      </ImageBackground>
+    </View >
   );
 }
 
 const styles = StyleSheet.create({
-  cameraButtonsContainer: {
-    flex: 1,
+  filmButtonsContainer: {
+    flex: 2,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
+    // width: 100,
+    // height: 200,
+  },
+  cameraButtonsContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 4,
+    borderRadius: 50,
+    width: 100,
+    height: "100%",
+    backgroundColor: "silver"
+    // alignSelf: "flex-end"
   },
 });
