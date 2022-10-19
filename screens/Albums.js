@@ -46,7 +46,7 @@ export default function Albums() {
     >
       <ImageBackground
         style={styles.albumsList}
-        source={require("../cork.jpeg")}
+        // source={require("../paper.jpg")}
       >
         {albums
           .sort(function (a, b) {
@@ -71,5 +71,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+    backgroundColor: "bisque",
   },
 });

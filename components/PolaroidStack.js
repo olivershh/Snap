@@ -30,15 +30,18 @@ export default function PolaroidStack({ photos }) {
 
   return (
     <View>
-      <SinglePolaroid />
+      <Image
+        source={require("../spiralalbum.png")}
+        style={{ width: 100, height: 120 }}
+      ></Image>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: 120,
-    height: 155,
+    width: 100,
+    height: 130,
     backgroundColor: "white",
     shadowColor: "black",
     shadowOffset: { width: 10, height: 10 },
