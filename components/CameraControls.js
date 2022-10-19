@@ -169,8 +169,8 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       }}
     >
       <ImageBackground
-        // source={require("../filmreel.png")}
         source={require("../filmreel.jpg")}
+        // source={require("../filmcartoonblack.png")}
         style={[styles.filmButtonsContainer]}
       >
         <Film
@@ -223,11 +223,9 @@ const styles = StyleSheet.create({
     flex: 2,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
     marginTop: 20,
-    marginLeft: -20,
-    marginRight: -20,
-    backgroundColor: "lightcyan",
+    marginLeft: -40,
+    marginRight: -40,
     // width: 100,
     // height: 200,
   },

@@ -15,7 +15,7 @@ export default function CameraScreen() {
       // source={require("../potentialBG/7.jpg")}
       // resizeMode="repeat"
       style={{
-        padding: 15,
+        padding: 30,
         backgroundColor: "white",
         flex: 1,
       }}
