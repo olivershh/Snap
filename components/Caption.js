@@ -4,20 +4,31 @@ import { Entypo } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import { storage, auth, db } from "../firebaseSetup";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { useFonts } from "expo-font";
 
 const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
   const [isEditing, setIsEditing] = useState(false);
 
+  const [loaded] = useFonts({
+    RockSalt: require("../assets/fonts/RockSalt-Regular.ttf"),
+  });
+
+  if (!loaded) {
+    return null;
+  }
+
   function CaptionBox() {
     return photoObj.caption ? (
-      <Text>{photoObj.caption}</Text>
+      <Text style={{ fontFamily: "RockSalt", fontSize: 14 }}>
+        {photoObj.caption}
+      </Text>
     ) : (
       <>
-        <Text>Add A comment</Text>
+        <Text style={{ color: "gray" }}>add a caption...</Text>
         <Entypo
           name="new-message"
           size={24}
-          color="black"
+          color="gray"
           onPress={() => setIsEditing(true)}
         />
       </>
@@ -46,20 +57,47 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
     }
 
     return (
-      <View>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "center",
+          marginLeft: 15,
+          marginRight: 15,
+        }}
+      >
         <TextInput
+          style={{
+            flex: 1,
+            backgroundColor: "ghostwhite",
+            fontFamily: "RockSalt",
+            fontSize: 14,
+            textAlign: "center",
+          }}
+          maxLength={35}
           onChangeText={(newText) => setText(newText)}
           value={text}
+          onSubmitEditing={handleCommentSubmit}
         ></TextInput>
-        <Button title="submit" onPress={handleCommentSubmit}></Button>
       </View>
     );
   }
 
+  const date = new Date(photoObj.date);
+  const localDate = date.toLocaleDateString("en-US");
+
   return (
-    <View style={{ flex: 1 }}>
-      {isEditing ? <EditBox /> : <CaptionBox />}
-      <Text>{photoObj.date}</Text>
+    <View style={{ alignItems: "center" }}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        {isEditing ? <EditBox /> : <CaptionBox />}
+      </View>
+      <View
+        style={{
+          margin: 10,
+        }}
+      >
+        <Text>{localDate}</Text>
+      </View>
     </View>
   );
 };

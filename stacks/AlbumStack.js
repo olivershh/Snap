@@ -16,22 +16,25 @@ export default AlbumStack = ({ navigation }) => {
         <Stack.Screen
           name="Albums"
           component={Albums}
-          options={{
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Add Album")}
-              >
-                <Text>+</Text>
-              </TouchableOpacity>
-            ),
-          }}
+          // options={{
+          //   headerRight: () => (
+          //     <TouchableOpacity
+          //       onPress={() => navigation.navigate("Add Album")}
+          //     >
+          //       <Text>+</Text>
+          //     </TouchableOpacity>
+          //   ),
+          // }}
         />
         <Stack.Screen
           name="Album"
           component={Album}
-          options={{ headerTransparent: false }}
+          options={({ route }) => ({
+            title: route.params.album.name,
+            headerTransparent: false,
+          })}
         />
-        <Stack.Screen name="Add Album" component={AddAlbum} />
+        {/* <Stack.Screen name="Add Album" component={AddAlbum} /> */}
       </Stack.Navigator>
     </AlbumProvider>
   );

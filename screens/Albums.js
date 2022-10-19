@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ImageBackground, ScrollView, StyleSheet, View } from "react-native";
 import AlbumCard from "../components/AlbumCard";
 import { AlbumContext } from "../context/AlbumContext";
 import { storage, auth, db } from "../firebaseSetup";
@@ -44,7 +44,10 @@ export default function Albums() {
       contentContainerStyle={styles.container}
       style={{ backgroundColor: "#fff" }}
     >
-      <View style={styles.albumsList}>
+      <ImageBackground
+        style={styles.albumsList}
+        // source={require("../paper.jpg")}
+      >
         {albums
           .sort(function (a, b) {
             return a.isFilmFull - b.isFilmFull;
@@ -56,20 +59,18 @@ export default function Albums() {
               key={album[0].name}
             />
           ))}
-      </View>
+      </ImageBackground>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    margin: "10%",
-  },
+  container: {},
   albumsList: {
-    flex: 1,
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    backgroundColor: "bisque",
   },
 });
