@@ -4,8 +4,8 @@ import { BlurView } from "expo-blur";
 export default function CameraImageTaken({ image }) {
   return (
     <ImageBackground
-      source={require("../mysteryphoto2.png")}
-      // source={{ uri: image }}
+      // source={require("../mysteryphoto2.png")}
+      source={{ uri: image }}
       style={styles.image}
     ></ImageBackground>
   );

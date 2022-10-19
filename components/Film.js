@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import { updateDoc } from "firebase/firestore";
 
 export default function Film(props) {
@@ -31,18 +31,27 @@ export default function Film(props) {
       });
   };
   return (
-    <View style={{ alignItems: "center" }}>
-      <Text>{props.film.name}</Text>
-      <MaterialCommunityIcons
-        name="film"
-        size={60}
-        color="black"
-        onPress={newFilmHandler}
-      />
+    <View style={{ alignItems: "center", padding: 10 }}>
+      <Text style={{ fontSize: "14%", fontWeight: "bold" }}>{props.film.name}</Text>
+      {!props.film.isFilmFull
+        ? <MaterialCommunityIcons
+          name="film"
+          size={"70%"}
+          color="black"
 
-      <Text>
+        /> : <>
+
+          <Entypo
+            name="circle-with-plus"
+            size={"50%"}
+            color="black"
+            onPress={newFilmHandler}
+          />
+        </>}
+
+      <Text style={{ fontSize: "14%", fontWeight: "bold" }}>
         {props.film.isFilmFull
-          ? `Press here to start a new film`
+          ? `New Film`
           : props.film.photosTaken + "/" + props.film.size}
       </Text>
     </View>
