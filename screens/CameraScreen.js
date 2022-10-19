@@ -11,7 +11,7 @@ export default function CameraScreen() {
 
   return (
     <ImageBackground
-      source={require("../silverbackground2-overlay.png")}
+      source={require("../backgroundcamera.png")}
       style={{
         padding: 15,
         backgroundColor: "lightgray",
@@ -19,7 +19,7 @@ export default function CameraScreen() {
       }}
     >
       <ImageBackground
-        source={require("../silverbackground2.jpg")}
+        source={require("../orange-background2.jpg")}
         style={{
           padding: 15, backgroundColor: "white", borderStyle: "solid",
           borderColor: "black",

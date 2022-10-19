@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
-import { View, Text, StyleSheet, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, ImageBackground, ActivityIndicator } from "react-native";
 
 import { storage, auth, db } from "../firebaseSetup";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -8,6 +8,7 @@ import Film from "./Film";
 import * as ImageManipulator from "expo-image-manipulator";
 
 import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { TouchableOpacity } from "react-native";
 
 export default function CameraControls({ cameraRef, setImage, image }) {
   const [film, setFilm] = useState(null);
@@ -163,7 +164,7 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       }}
     >
       <ImageBackground
-        source={require("../silverbackground2.jpg")}
+        source={require("../black-background.jpg")}
 
         style={{
           borderStyle: "solid",
@@ -178,15 +179,16 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           marginBottom: 15,
         }}
       >
-        <View style={[styles.cameraButtonsContainer]}>
+        <TouchableOpacity style={[styles.cameraButtonsContainer]}
+          onPress={!image ? takePicture : resetImage}>
           {isLoading ? (
-            <Text>Taking photo...</Text>
+            <ActivityIndicator size="small" color="black" />
           ) : !image ? (
             <MaterialIcons
               name="photo-camera"
               size={45}
               color="black"
-              onPress={takePicture}
+
             />
           ) : (
             <>
@@ -194,15 +196,15 @@ export default function CameraControls({ cameraRef, setImage, image }) {
                 name="back"
                 size={24}
                 color="black"
-                onPress={resetImage}
+
               />
             </>
           )}
-        </View>
+        </TouchableOpacity>
       </ImageBackground>
 
       <ImageBackground
-        source={require("../filmreel.jpg")}
+        source={require("../filmreel.png")}
         style={[
           styles.filmButtonsContainer,
         ]}
