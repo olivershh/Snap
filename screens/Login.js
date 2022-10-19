@@ -1,5 +1,6 @@
 import {
   KeyboardAvoidingView,
+  ImageBackground,
   Text,
   TextInput,
   StyleSheet,
@@ -7,16 +8,16 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useEffect, useState } from "react";
-import { auth, db } from "../firebaseSetup";
+import {useEffect, useState} from "react";
+import {auth, db} from "../firebaseSetup";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { useNavigation } from "@react-navigation/native";
-import { setDoc, doc } from "firebase/firestore";
-import { useIsFocused } from "@react-navigation/native";
+import {useNavigation} from "@react-navigation/native";
+import {setDoc, doc} from "firebase/firestore";
+import {useIsFocused} from "@react-navigation/native";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -28,6 +29,8 @@ function Login() {
 
   const isFocused = useIsFocused();
 
+  const back_img = require("../images/sign_back.jpeg");
+  const [avatar, setAvatar] = useState(null);
   useEffect(() => {
     // signOut(auth);
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -38,6 +41,21 @@ function Login() {
     return unsubscribe;
   }, [isFocused]);
 
+  const decodeError = (err) => {
+    console.log(err);
+    const errObj = {
+      "auth/invalid-email": "The email format is not correct.",
+      "auth/email-already-in-use": "The user with the email already exists.",
+      "auth/weak-password": "Password should be at least 6 characters.",
+
+      "auth/user-mismatch": "The username and password do not match.",
+      "auth/wrong-password": "The password is not correct.",
+    };
+    if (!err.code) return "Error!";
+    if (errObj[err.code]) return errObj[err.code];
+    else return err.code;
+  };
+
   const handleSignUp = async () => {
     console.log("attempt to sign up");
     try {
@@ -45,16 +63,14 @@ function Login() {
         auth,
         email,
         password
-      ).catch((err) => {
-        alert("Error adding new user: ", err);
-      });
+      );
       const newEmail = newUser.user.email;
       console.log("registered with: ", newEmail);
       const userDoc = doc(db, `users/${newEmail}`);
       const userData = {
         albums: {
           0: {
-            name: "Album1",
+            name: "Album 1",
             size: 2,
             photosTaken: 0,
             isFilmFull: false,
@@ -63,82 +79,96 @@ function Login() {
           },
         },
         currFilm: 0,
+        avatarUrl: avatar,
       };
-      const user = await setDoc(userDoc, userData, { merge: true });
-    } catch (e) {
-      console.error("Error adding document: ", e);
+      const user = await setDoc(userDoc, userData, {merge: true});
+    } catch (err) {
+      setError(decodeError(err));
     }
   };
 
   const handleLogIn = () => {
-    console.log("attempt to sign in");
+    console.log("attempt to log in");
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log("logged in with: ", user.email);
+        console.log("logged in with: ", userCredentials.user.email);
       })
       .catch((err) => {
-        console.log(err);
-
-        if (err.code === "auth/invalid-email") {
-          setError("There is no user with this email");
-        } else if (err.code === "auth/user-mismatch") {
-          setError("The username and password do not match");
-        } else {
-          console.log(err);
-          setError(err.code);
-        }
-        Alert.alert("authentication error: ", error);
+        setError(decodeError(err));
       });
   };
 
   if (!auth.currentUser?.email) {
     return (
       <KeyboardAvoidingView style={styles.container}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            style={styles.input}
-            secureTextEntry
-          />
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={handleLogIn} style={styles.button}>
-            <Text style={styles.buttonText}>Log in</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleSignUp}
-            style={[styles.button, styles.buttonOutline]}
-          >
-            <Text style={styles.buttonOutlineText}>Sign up</Text>
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.title}>
+          <Text style={{color: "red"}}>Snap</Text> - retro camera{" "}
+          <Text style={{color: "green"}}>app</Text>!
+        </Text>
+        <ImageBackground
+          source={back_img}
+          resizeMode="repeat"
+          style={styles.backImage}
+        >
+          <View style={styles.backgoundContainer}>
+            <View style={styles.polaroidContainer}>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  placeholder="Email"
+                  placeholderTextColor="white"
+                  value={email}
+                  onChangeText={(text) => {
+                    setEmail(text);
+                    setError(null);
+                  }}
+                  style={styles.input}
+                />
+
+                <TextInput
+                  placeholder="Password"
+                  placeholderTextColor="white"
+                  value={password}
+                  onChangeText={(text) => {
+                    setPassword(text);
+                    setError(null);
+                  }}
+                  style={styles.input}
+                  secureTextEntry
+                />
+                <TextInput
+                  placeholder="Avatar URL"
+                  placeholderTextColor="white"
+                  value={avatar}
+                  onChangeText={(text) => {
+                    setAvatar(text);
+                    setError(null);
+                  }}
+                  style={styles.input}
+                />
+              </View>
+
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity onPress={handleLogIn} style={styles.button}>
+                  <Text style={styles.buttonText}>Log in</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleSignUp}
+                  style={[styles.button, styles.buttonOutline]}
+                >
+                  <Text style={styles.buttonOutlineText}>Sign up</Text>
+                </TouchableOpacity>
+              </View>
+              {error ? (
+                <View style={styles.errorMessage}>
+                  <Text style={styles.errMsgText}>{error} </Text>
+                </View>
+              ) : null}
+            </View>
+          </View>
+        </ImageBackground>
       </KeyboardAvoidingView>
     );
   }
-  // else {
-  //   return (
-  //     <View style={styles.container}>
-  //       <Text>You're already logged in as: {`${auth.currentUser?.email}`}</Text>
-  //       <TouchableOpacity
-  //         onPress={() => {
-  //           navigation.navigate("Home");
-  //         }}
-  //         style={styles.button}
-  //       >
-  //         <Text style={styles.buttonText}>Return to Camera</Text>
-  //       </TouchableOpacity>
-  //     </View>
-  //   );
-  // }
 }
 
 export default Login;
@@ -148,42 +178,70 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingTop: "10%",
+  },
+  title: {
+    paddingTop: 30,
+    fontSize: 20,
+    fontWeight: "800",
+  },
+  backImage: {
+    width: "100%",
+    height: "100%",
+  },
+  backgoundContainer: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  polaroidContainer: {
+    width: "80%",
+    height: "45%",
+    borderWidth: 0.5,
+    borderColor: "grey",
   },
   inputContainer: {
-    width: "80%",
-  },
-  input: {
-    backgroundColor: "white",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 5,
-  },
-  buttonContainer: {
-    width: "60%",
+    height: "80%",
+    backgroundColor: "rgba(0, 0, 0, 1)",
+    borderWidth: 20,
+    borderColor: "white",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 40,
+  },
+  input: {
+    color: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  buttonContainer: {
+    height: "20%",
+    marginHorizontal: "auto",
+    flexDirection: "row",
   },
   button: {
-    backgroundColor: "#0782F9",
-    width: "100%",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  buttonOutline: {
     backgroundColor: "white",
-    marginTop: 5,
-    borderColor: "#0782F9",
-    borderWidth: 3,
+    width: "50%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonText: {
-    color: "white",
+    color: "black",
     fontWeight: "700",
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: "#0782F9",
+    color: "green",
+  },
+  errorMessage: {
+    width: "100%",
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
+  errMsgText: {
+    color: "red",
   },
 });
