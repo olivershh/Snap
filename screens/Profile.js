@@ -19,7 +19,13 @@ import { useNavigation } from "@react-navigation/native";
 import { doc, getDoc } from "firebase/firestore";
 
 function Profile() {
-  const back_img = require("../potentialBG/CameraBackground6.jpg");
+  // const back_img = require("../potentialBG/4.webp");
+  // const back_img = require("../potentialBG/5.jpg");
+  // const back_img = require("../potentialBG/7.jpg");
+  // const back_img = require("../potentialBG/8.webp");
+  // const back_img = require("../potentialBG/9.jpg");
+  // const back_img = require("../potentialBG/CameraBackground6.jpg");
+  const back_img = require("../potentialBG/10doodles.png");
   const [newPassword, setNewPassword] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
   const [newPassMode, setNewPassMode] = useState(false);
@@ -35,7 +41,7 @@ function Profile() {
         setAvatarUrl(() => {
           let url = docSnap.data().avatarUrl;
           let urlDefault =
-            "https://damagedphotorestoration.com/blog/images/gallery/news_preview2_131.jpg";
+            "https://png.pngtree.com/png-clipart/20190613/original/pngtree-who-icon-png-image_3568672.jpg";
           url = url ? url : urlDefault;
           return {
             uri: url,
@@ -89,12 +95,8 @@ function Profile() {
   return (
     <>
       <View style={styles.container}>
-        <ImageBackground
-          source={back_img}
-          resizeMode="repeat"
-          style={styles.backImage}
-        >
-          <View style={styles.backgoundContainer}>
+        <ImageBackground source={back_img} style={styles.backImage}>
+          <View style={styles.backgroundContainer}>
             <View style={styles.polaroidContainer}>
               <Image
                 style={styles.avatarPhoto}
@@ -194,13 +196,15 @@ const styles = StyleSheet.create({
   backImage: {
     width: "100%",
     height: "100%",
+    // backgroundColor: "bisque",
+    backgroundColor: "#FBE4FF",
   },
-  backgoundContainer: {
+  backgroundContainer: {
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    // backgroundColor: "rgba(255, 255, 255, 0.1)",
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: "center",
   },
   polaroidContainer: {
     width: "70%",

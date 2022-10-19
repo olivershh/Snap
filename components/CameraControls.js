@@ -170,6 +170,7 @@ export default function CameraControls({ cameraRef, setImage, image }) {
     >
       <ImageBackground
         source={require("../filmreel.jpg")}
+        // source={require("../filmcartoonblack.png")}
         style={[styles.filmButtonsContainer]}
       >
         <Film
@@ -222,22 +223,22 @@ const styles = StyleSheet.create({
     flex: 2,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
     marginTop: 20,
-    marginLeft: -20,
-    marginRight: -20,
+    marginLeft: -40,
+    marginRight: -40,
     // width: 100,
     // height: 200,
   },
   cameraButtonsContainer: {
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 4,
-    borderRadius: 50,
-    width: 100,
-    height: "100%",
-    backgroundColor: "silver",
-
-    // alignSelf: "flex-end"
+    borderWidth: 5,
+    borderRadius: 100,
+    width: 120,
+    height: 120,
+    marginTop: 30,
+    backgroundColor: "lightcyan",
+    // backgroundColor: "#e0bbe4",
+    opacity: 1,
   },
 });
