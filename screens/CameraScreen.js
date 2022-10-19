@@ -11,7 +11,7 @@ export default function CameraScreen() {
 
   return (
     <ImageBackground
-      source={require("../potentialBG/10doodles.png")}
+      // source={require("../potentialBG/10doodles.png")}
       // source={require("../potentialBG/7.jpg")}
       // resizeMode="repeat"
       style={{
@@ -34,6 +34,7 @@ export default function CameraScreen() {
             borderStyle: "solid",
             borderColor: "black",
             borderWidth: 2,
+            borderBottomColor: "white",
           }}
         >
           {!image ? (

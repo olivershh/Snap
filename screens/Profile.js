@@ -26,6 +26,8 @@ function Profile() {
   // const back_img = require("../potentialBG/9.jpg");
   // const back_img = require("../potentialBG/CameraBackground6.jpg");
   const back_img = require("../potentialBG/10doodles.png");
+  // const back_img_2 = require("../textures/paperplain.jpg");
+  const back_img_2 = require("../textures/papermedium.jpg");
   const [newPassword, setNewPassword] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
   const [newPassMode, setNewPassMode] = useState(false);
@@ -95,8 +97,8 @@ function Profile() {
   return (
     <>
       <View style={styles.container}>
-        <ImageBackground source={back_img} style={styles.backImage}>
-          <View style={styles.backgroundContainer}>
+        <ImageBackground style={styles.backImage}>
+          <ImageBackground source={back_img} style={styles.backgroundContainer}>
             <View style={styles.polaroidContainer}>
               <Image
                 style={styles.avatarPhoto}
@@ -182,7 +184,7 @@ function Profile() {
                 )}
               </View>
             </View>
-          </View>
+          </ImageBackground>
         </ImageBackground>
       </View>
     </>
@@ -202,7 +204,7 @@ const styles = StyleSheet.create({
   backgroundContainer: {
     width: "100%",
     height: "100%",
-    // backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
     alignItems: "center",
     justifyContent: "center",
   },

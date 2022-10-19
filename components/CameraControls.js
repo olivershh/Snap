@@ -169,28 +169,13 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       }}
     >
       <ImageBackground
-        // source={require("../filmreel.png")}
-        source={require("../filmreel.jpg")}
-        style={[styles.filmButtonsContainer]}
-      >
-        <Film
-          email={email}
-          docRef={docRef}
-          setFilm={setFilm}
-          film={
-            film
-              ? film
-              : { name: "", size: 0, photosTaken: 0, isFilmFull: false }
-          }
-        />
-      </ImageBackground>
-      <ImageBackground
         // source={require("../black-background.jpg")}
         style={{
-          // borderStyle: "solid",
-          // borderColor: "black",
-          // borderWidth: 2,
-          // backgroundColor: ",
+          borderStyle: "solid",
+          borderColor: "black",
+          borderWidth: 2,
+          borderTopColor: "white",
+          backgroundColor: "white",
           flex: 1,
           padding: 15,
           flexDirection: "row",
@@ -214,6 +199,22 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           )}
         </TouchableOpacity>
       </ImageBackground>
+      <ImageBackground
+        // source={require("../filmreel.png")}
+        source={require("../filmcartoon.png")}
+        style={[styles.filmButtonsContainer]}
+      >
+        <Film
+          email={email}
+          docRef={docRef}
+          setFilm={setFilm}
+          film={
+            film
+              ? film
+              : { name: "", size: 0, photosTaken: 0, isFilmFull: false }
+          }
+        />
+      </ImageBackground>
     </View>
   );
 }
@@ -223,11 +224,11 @@ const styles = StyleSheet.create({
     flex: 2,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
+    // borderWidth: 1,
     marginTop: 20,
     marginLeft: -20,
     marginRight: -20,
-    backgroundColor: "lightcyan",
+    // backgroundColor: "lightcyan",
     // width: 100,
     // height: 200,
   },
