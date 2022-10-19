@@ -15,6 +15,7 @@ import * as ImageManipulator from "expo-image-manipulator";
 
 import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { TouchableOpacity } from "react-native";
+import colorMain from "../assets/colors/colorMain";
 
 export default function CameraControls({ cameraRef, setImage, image }) {
   const [film, setFilm] = useState(null);
@@ -173,7 +174,7 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         style={{
           borderStyle: "solid",
           borderColor: "black",
-          borderWidth: 2,
+          borderWidth: 3,
           backgroundColor: "white",
           borderTopColor: "white",
           flex: 1,
@@ -200,7 +201,7 @@ export default function CameraControls({ cameraRef, setImage, image }) {
         </TouchableOpacity>
       </ImageBackground>
       <ImageBackground
-        source={require("../filmcartoon.png")}
+        source={require("../filmreel.jpg")}
         // source={require("../filmcartoonblack.png")}
         style={[styles.filmButtonsContainer]}
       >
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: 80,
     height: 80,
-    backgroundColor: "black",
+    backgroundColor: colorMain,
     // backgroundColor: "#e0bbe4",
     opacity: 1,
   },

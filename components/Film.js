@@ -1,8 +1,17 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import { updateDoc } from "firebase/firestore";
+import { useFonts } from "expo-font";
 
 export default function Film(props) {
+  const [loaded] = useFonts({
+    Handlee: require("../assets/fonts/PressStart2P-Regular.ttf"),
+  });
+
+  if (!loaded) {
+    return null;
+  }
+
   const newFilmHandler = () => {
     if (!props.film.isFilmFull) {
       return;
@@ -31,25 +40,51 @@ export default function Film(props) {
       });
   };
   return (
-    <View style={{ alignItems: "center", padding: 10, flexDirection: "row" }}>
-      {!props.film.isFilmFull ? (
-        <MaterialCommunityIcons name="film" size={60} color="black" />
-      ) : (
-        <>
+    <View
+      style={{
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 10,
+        flex: 1,
+        flexDirection: "column ",
+      }}
+    >
+      <View style={{ marginRight: 1 }}>
+        {!props.film.isFilmFull ? (
+          <MaterialCommunityIcons name="film" size={60} color="black" />
+        ) : (
           <Entypo
             name="circle-with-plus"
             size={50}
             color="black"
             onPress={newFilmHandler}
           />
-        </>
-      )}
+        )}
+      </View>
 
-      <Text style={{ fontSize: 14, fontWeight: "bold" }}>
-        {props.film.isFilmFull
-          ? `New Film`
-          : props.film.photosTaken + "/" + props.film.size}
-      </Text>
+      <View style={[styles.film]}>
+        <Text style={styles.filmText}>
+          {props.film.isFilmFull
+            ? `New Film`
+            : props.film.photosTaken + "/" + props.film.size}
+        </Text>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  film: {
+    backgroundColor: "black",
+    color: "white",
+    // margin: 10,
+    borderRadius: 20,
+  },
+  filmText: {
+    fontFamily: "Handlee",
+    fontSize: 14,
+    color: "white",
+    padding: 5,
+    // margin: 5,
+  },
+});

@@ -17,6 +17,7 @@ import {
 import { auth, db } from "../firebaseSetup";
 import { useNavigation } from "@react-navigation/native";
 import { doc, getDoc } from "firebase/firestore";
+import colorMain from "../assets/colors/colorMain";
 
 function Profile() {
   // const back_img = require("../potentialBG/4.webp");
@@ -25,7 +26,7 @@ function Profile() {
   // const back_img = require("../potentialBG/8.webp");
   // const back_img = require("../potentialBG/9.jpg");
   // const back_img = require("../potentialBG/CameraBackground6.jpg");
-  const back_img = require("../potentialBG/10doodles.png");
+  const back_img = require("../potentialBG/doodleswhite.png");
   const [newPassword, setNewPassword] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
   const [newPassMode, setNewPassMode] = useState(false);
@@ -95,94 +96,96 @@ function Profile() {
   return (
     <>
       <View style={styles.container}>
-        <ImageBackground source={back_img} style={styles.backImage}>
-          <View style={styles.backgroundContainer}>
-            <View style={styles.polaroidContainer}>
-              <Image
-                style={styles.avatarPhoto}
-                source={avatarUrl}
-                resizeMode="cover"
-              ></Image>
+        <ImageBackground source={back_img}>
+          <ImageBackground source={back_img} style={styles.backImage}>
+            <View style={styles.backgroundContainer}>
+              <View style={styles.polaroidContainer}>
+                <Image
+                  style={styles.avatarPhoto}
+                  source={avatarUrl}
+                  resizeMode="cover"
+                ></Image>
 
-              <Text style={styles.emailText}>
-                Email: {auth.currentUser?.email}
-              </Text>
-            </View>
+                <Text style={styles.emailText}>
+                  Email: {auth.currentUser?.email}
+                </Text>
+              </View>
 
-            <View style={styles.changePassBox}>
-              {newPassMode ? (
-                <View style={styles.inputContainer}>
-                  <TextInput
-                    placeholder="New Password"
-                    value={newPassword}
-                    onChangeText={(text) => setNewPassword(text)}
-                    style={styles.input}
-                    secureTextEntry
-                  />
-                  <TextInput
-                    placeholder="Confirm New Password"
-                    value={newPassword2}
-                    onChangeText={(text) => setNewPassword2(text)}
-                    style={styles.input}
-                    secureTextEntry
-                  />
-                </View>
-              ) : (
-                <></>
-              )}
-              <View style={styles.buttonContainer}>
-                {!newPassMode ? (
-                  <>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => {
-                        handleChangePassMode();
-                      }}
-                    >
-                      <Text style={styles.buttonText}>Change Password</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={[styles.button, styles.buttonOutline]}
-                      onPress={() => {
-                        handleSignOut();
-                      }}
-                    >
-                      <Text
-                        style={[styles.buttonText, styles.buttonOutlineText]}
-                      >
-                        Sign Out
-                      </Text>
-                    </TouchableOpacity>
-                  </>
+              <View style={styles.changePassBox}>
+                {newPassMode ? (
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      placeholder="New Password"
+                      value={newPassword}
+                      onChangeText={(text) => setNewPassword(text)}
+                      style={styles.input}
+                      secureTextEntry
+                    />
+                    <TextInput
+                      placeholder="Confirm New Password"
+                      value={newPassword2}
+                      onChangeText={(text) => setNewPassword2(text)}
+                      style={styles.input}
+                      secureTextEntry
+                    />
+                  </View>
                 ) : (
-                  <>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => {
-                        handleChangingPassword();
-                      }}
-                    >
-                      <Text style={styles.buttonText}>Set New Password</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[
-                        styles.button,
-                        styles.buttonOutline,
-                        ,
-                        styles.buttonCancel,
-                      ]}
-                      onPress={() => {
-                        handleChangePassMode();
-                      }}
-                    >
-                      <Text style={styles.buttonOutlineText}>Cancel</Text>
-                    </TouchableOpacity>
-                  </>
+                  <></>
                 )}
+                <View style={styles.buttonContainer}>
+                  {!newPassMode ? (
+                    <>
+                      <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => {
+                          handleChangePassMode();
+                        }}
+                      >
+                        <Text style={styles.buttonText}>Change Password</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        style={[styles.button, styles.buttonOutline]}
+                        onPress={() => {
+                          handleSignOut();
+                        }}
+                      >
+                        <Text
+                          style={[styles.buttonText, styles.buttonOutlineText]}
+                        >
+                          Sign Out
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <>
+                      <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => {
+                          handleChangingPassword();
+                        }}
+                      >
+                        <Text style={styles.buttonText}>Set New Password</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[
+                          styles.button,
+                          styles.buttonOutline,
+                          ,
+                          styles.buttonCancel,
+                        ]}
+                        onPress={() => {
+                          handleChangePassMode();
+                        }}
+                      >
+                        <Text style={styles.buttonOutlineText}>Cancel</Text>
+                      </TouchableOpacity>
+                    </>
+                  )}
+                </View>
               </View>
             </View>
-          </View>
+          </ImageBackground>
         </ImageBackground>
       </View>
     </>
@@ -197,7 +200,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     // backgroundColor: "bisque",
-    backgroundColor: "#FBE4FF",
+    backgroundColor: colorMain,
   },
   backgroundContainer: {
     width: "100%",

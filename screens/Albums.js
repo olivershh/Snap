@@ -5,6 +5,7 @@ import { AlbumContext } from "../context/AlbumContext";
 import { storage, auth, db } from "../firebaseSetup";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useIsFocused } from "@react-navigation/native";
+import colorMain from "../assets/colors/colorMain";
 
 export default function Albums() {
   const email = auth.currentUser?.email;
@@ -42,23 +43,28 @@ export default function Albums() {
   return (
     <ScrollView
       contentContainerStyle={styles.container}
-      style={{ backgroundColor: "bisque" }}
+      style={{ backgroundColor: colorMain }}
     >
       <ImageBackground
-        style={styles.albumsList}
-        // source={require("../paper.jpg")}
+      // source={require("../potentialBG/abstract1.png")}
+      // resizeMode="repeat"
       >
-        {albums
-          .sort(function (a, b) {
-            return a.isFilmFull - b.isFilmFull;
-          })
-          .map((album) => (
-            <AlbumCard
-              album={album[0]}
-              albumNumber={album[1]}
-              key={album[0].name}
-            />
-          ))}
+        <ImageBackground
+          style={styles.albumsList}
+          // source={require("../potentialBG/10doodles.png")}
+        >
+          {albums
+            .sort(function (a, b) {
+              return a.isFilmFull - b.isFilmFull;
+            })
+            .map((album) => (
+              <AlbumCard
+                album={album[0]}
+                albumNumber={album[1]}
+                key={album[0].name}
+              />
+            ))}
+        </ImageBackground>
       </ImageBackground>
     </ScrollView>
   );
@@ -71,5 +77,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+    height: "100%",
+    width: "100%",
   },
 });
