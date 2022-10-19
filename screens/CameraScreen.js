@@ -15,8 +15,8 @@ export default function CameraScreen() {
       // source={require("../potentialBG/7.jpg")}
       // resizeMode="repeat"
       style={{
-        padding: 30,
-        backgroundColor: "white",
+        padding: 35,
+        backgroundColor: "#FBE4FF",
         flex: 1,
       }}
     >
@@ -29,11 +29,13 @@ export default function CameraScreen() {
         <ImageBackground
           // source={require("../orange-background2.jpg")}
           style={{
-            padding: 15,
+            padding: 20,
+            paddingBottom: 0,
             backgroundColor: "white",
             borderStyle: "solid",
             borderColor: "black",
             borderWidth: 2,
+            borderBottomColor: "white",
           }}
         >
           {!image ? (

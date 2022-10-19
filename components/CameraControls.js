@@ -169,28 +169,13 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       }}
     >
       <ImageBackground
-        source={require("../filmreel.jpg")}
-        // source={require("../filmcartoonblack.png")}
-        style={[styles.filmButtonsContainer]}
-      >
-        <Film
-          email={email}
-          docRef={docRef}
-          setFilm={setFilm}
-          film={
-            film
-              ? film
-              : { name: "", size: 0, photosTaken: 0, isFilmFull: false }
-          }
-        />
-      </ImageBackground>
-      <ImageBackground
         // source={require("../black-background.jpg")}
         style={{
-          // borderStyle: "solid",
-          // borderColor: "black",
-          // borderWidth: 2,
-          // backgroundColor: ",
+          borderStyle: "solid",
+          borderColor: "black",
+          borderWidth: 2,
+          backgroundColor: "white",
+          borderTopColor: "white",
           flex: 1,
           padding: 15,
           flexDirection: "row",
@@ -204,15 +189,31 @@ export default function CameraControls({ cameraRef, setImage, image }) {
           onPress={!image ? takePicture : resetImage}
         >
           {isLoading ? (
-            <ActivityIndicator size="small" color="black" />
+            <ActivityIndicator size="small" color="white" />
           ) : !image ? (
-            <MaterialIcons name="photo-camera" size={45} color="black" />
+            <MaterialIcons name="photo-camera" size={45} color="white" />
           ) : (
             <>
-              <Entypo name="back" size={24} color="black" />
+              <Entypo name="back" size={24} color="white" />
             </>
           )}
         </TouchableOpacity>
+      </ImageBackground>
+      <ImageBackground
+        source={require("../filmcartoon.png")}
+        // source={require("../filmcartoonblack.png")}
+        style={[styles.filmButtonsContainer]}
+      >
+        <Film
+          email={email}
+          docRef={docRef}
+          setFilm={setFilm}
+          film={
+            film
+              ? film
+              : { name: "", size: 0, photosTaken: 0, isFilmFull: false }
+          }
+        />
       </ImageBackground>
     </View>
   );
@@ -234,10 +235,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 5,
     borderRadius: 100,
-    width: 120,
-    height: 120,
-    marginTop: 30,
-    backgroundColor: "lightcyan",
+    width: 80,
+    height: 80,
+    backgroundColor: "black",
     // backgroundColor: "#e0bbe4",
     opacity: 1,
   },

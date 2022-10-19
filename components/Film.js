@@ -31,7 +31,7 @@ export default function Film(props) {
       });
   };
   return (
-    <View style={{ alignItems: "center", padding: 10 }}>
+    <View style={{ alignItems: "center", padding: 10, flexDirection: "row" }}>
       {!props.film.isFilmFull ? (
         <MaterialCommunityIcons name="film" size={60} color="black" />
       ) : (

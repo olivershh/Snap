@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   avatarPhoto: {
     height: "80%",
     width: "100%",
-    borderWidth: 18,
+    borderWidth: 16,
     borderColor: "white",
   },
   inputContainer: {
