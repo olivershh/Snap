@@ -50,6 +50,7 @@ function Login() {
 
       "auth/user-mismatch": "The username and password do not match.",
       "auth/wrong-password": "The password is not correct.",
+      "auth/user-not-found": "The user with this email doesn't exist",
     };
     if (!err.code) return "Error!";
     if (errObj[err.code]) return errObj[err.code];
@@ -103,7 +104,7 @@ function Login() {
       <KeyboardAvoidingView style={styles.container}>
         <Text style={styles.title}>
           <Text style={{color: "red"}}>Snap</Text> - retro camera{" "}
-          <Text style={{color: "green"}}>app</Text>!
+          <Text style={{color: "#254252"}}>app</Text>!
         </Text>
         <ImageBackground
           source={back_img}
@@ -113,38 +114,44 @@ function Login() {
           <View style={styles.backgoundContainer}>
             <View style={styles.polaroidContainer}>
               <View style={styles.inputContainer}>
-                <TextInput
-                  placeholder="Email"
-                  placeholderTextColor="white"
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                    setError(null);
-                  }}
-                  style={styles.input}
-                />
+                <ImageBackground
+                  style={styles.avatarPhoto}
+                  source={{uri: avatar}}
+                  resizeMode="cover"
+                >
+                  <TextInput
+                    placeholder="Email"
+                    placeholderTextColor="white"
+                    value={email}
+                    onChangeText={(text) => {
+                      setEmail(text);
+                      setError(null);
+                    }}
+                    style={styles.input}
+                  />
 
-                <TextInput
-                  placeholder="Password"
-                  placeholderTextColor="white"
-                  value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                    setError(null);
-                  }}
-                  style={styles.input}
-                  secureTextEntry
-                />
-                <TextInput
-                  placeholder="Avatar URL"
-                  placeholderTextColor="white"
-                  value={avatar}
-                  onChangeText={(text) => {
-                    setAvatar(text);
-                    setError(null);
-                  }}
-                  style={styles.input}
-                />
+                  <TextInput
+                    placeholder="Password"
+                    placeholderTextColor="white"
+                    value={password}
+                    onChangeText={(text) => {
+                      setPassword(text);
+                      setError(null);
+                    }}
+                    style={styles.input}
+                    secureTextEntry
+                  />
+                  <TextInput
+                    placeholder="Avatar URL"
+                    placeholderTextColor="white"
+                    value={avatar}
+                    onChangeText={(text) => {
+                      setAvatar(text);
+                      setError(null);
+                    }}
+                    style={styles.input}
+                  />
+                </ImageBackground>
               </View>
 
               <View style={styles.buttonContainer}>
@@ -202,6 +209,11 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: "grey",
   },
+  avatarPhoto: {
+    height: "100%",
+    justifyContent: "center",
+    // alignItems: "center",
+  },
   inputContainer: {
     height: "80%",
     backgroundColor: "rgba(0, 0, 0, 1)",
@@ -214,9 +226,14 @@ const styles = StyleSheet.create({
     color: "white",
     paddingHorizontal: 15,
     paddingVertical: 10,
+    color: "white",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: 10,
   },
   buttonContainer: {
-    height: "20%",
+    height: "15%",
+    borderBottomWidth: 0.5,
+    borderColor: "grey",
     marginHorizontal: "auto",
     flexDirection: "row",
   },
@@ -232,7 +249,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: "green",
+    color: "#254252",
   },
   errorMessage: {
     width: "100%",

@@ -97,7 +97,6 @@ function Profile() {
                   style={styles.avatarPhoto}
                   source={avatarUrl}
                   resizeMode="cover"
-                  width={"20%"}
                 >
                   <Text style={styles.infoList}>
                     Email: {auth.currentUser?.email}
