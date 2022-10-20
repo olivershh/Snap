@@ -26,7 +26,7 @@ function Profile() {
   // const back_img = require("../potentialBG/8.webp");
   // const back_img = require("../potentialBG/9.jpg");
   // const back_img = require("../potentialBG/CameraBackground6.jpg");
-  const back_img = require("../potentialBG/doodleswhite.png");
+  const back_img = require("../potentialBG/10doodles.png");
   const [newPassword, setNewPassword] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
   const [newPassMode, setNewPassMode] = useState(false);
@@ -96,7 +96,7 @@ function Profile() {
   return (
     <>
       <View style={styles.container}>
-        <ImageBackground source={back_img}>
+        <ImageBackground source={require("../potentialBG/7.jpg")}>
           <ImageBackground source={back_img} style={styles.backImage}>
             <View style={styles.backgroundContainer}>
               <View style={styles.polaroidContainer}>

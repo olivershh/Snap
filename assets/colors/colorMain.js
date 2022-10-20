@@ -1,1 +1,1 @@
-export default colorMain = "#003049";
+export default colorMain = "#a8dadc";

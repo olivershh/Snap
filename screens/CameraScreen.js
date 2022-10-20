@@ -16,7 +16,7 @@ export default function CameraScreen() {
       style={{ flex: 1, backgroundColor: colorMain }}
     >
       <ImageBackground
-        source={require("../potentialBG/doodleswhite.png")}
+        source={require("../potentialBG/10doodles.png")}
         // source={require("../potentialBG/7.jpg")}
         // resizeMode="repeat"
         style={{
