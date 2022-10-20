@@ -102,7 +102,7 @@ function Profile() {
               <View style={styles.polaroidContainer}>
                 <Image
                   style={styles.avatarPhoto}
-                  source={avatarUrl}
+                  source={require("../usergeneric.jpeg")}
                   resizeMode="cover"
                 ></Image>
 
