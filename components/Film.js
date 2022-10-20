@@ -18,7 +18,7 @@ export default function Film(props) {
     }
     const newFilm = {
       name: `Album ${props.film.index + 2}`,
-      size: 2,
+      size: 20,
       photosTaken: 0,
       isFilmFull: false,
       path: `user_${props.email}/albums/`,

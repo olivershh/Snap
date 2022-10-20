@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   Alert,
+  Image,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebaseSetup";
@@ -72,7 +73,7 @@ function Login() {
         albums: {
           0: {
             name: "Album 1",
-            size: 2,
+            size: 20,
             photosTaken: 0,
             isFilmFull: false,
             path: `user_${newEmail}/albums/`,
