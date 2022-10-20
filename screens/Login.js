@@ -8,15 +8,16 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import {useEffect, useState} from "react";
-import {auth, db} from "../firebaseSetup";
+import { useEffect, useState } from "react";
+import { auth, db } from "../firebaseSetup";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import {useNavigation} from "@react-navigation/native";
-import {setDoc, doc} from "firebase/firestore";
-import {useIsFocused} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import { setDoc, doc } from "firebase/firestore";
+import { useIsFocused } from "@react-navigation/native";
+import colorMain from "../assets/colors/colorMain";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -28,7 +29,7 @@ function Login() {
 
   const isFocused = useIsFocused();
 
-  const back_img = require("../images/sign_back.jpeg");
+  const back_img = require("../potentialBG/10doodles.png");
 
   useEffect(() => {
     // signOut(auth);
@@ -80,7 +81,7 @@ function Login() {
         },
         currFilm: 0,
       };
-      const user = await setDoc(userDoc, userData, {merge: true});
+      const user = await setDoc(userDoc, userData, { merge: true });
     } catch (err) {
       setError(decodeError(err));
     }
@@ -99,63 +100,65 @@ function Login() {
 
   if (!auth.currentUser?.email) {
     return (
-      <KeyboardAvoidingView style={styles.container}>
-        <Text style={styles.title}>
-          <Text style={{color: "red"}}>Snap</Text> - retro camera{" "}
-          <Text style={{color: "#254252"}}>app</Text>!
-        </Text>
-        <ImageBackground
-          source={back_img}
-          resizeMode="repeat"
-          style={styles.backImage}
-        >
-          <View style={styles.backgoundContainer}>
-            <View style={styles.polaroidContainer}>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  placeholder="Email"
-                  placeholderTextColor="white"
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                    setError(null);
-                  }}
-                  style={styles.input}
-                />
+      <View style={{ flex: 1, backgroundColor: colorMain }}>
+        <KeyboardAvoidingView style={styles.container}>
+          <Text style={styles.title}>
+            <Text style={{ color: "red" }}>Snap</Text> - retro camera{" "}
+            <Text style={{ color: "#254252" }}>app</Text>!
+          </Text>
+          <ImageBackground
+            source={back_img}
+            resizeMode="repeat"
+            style={styles.backImage}
+          >
+            <View style={styles.backgoundContainer}>
+              <View style={styles.polaroidContainer}>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    placeholder="Email"
+                    placeholderTextColor="white"
+                    value={email}
+                    onChangeText={(text) => {
+                      setEmail(text);
+                      setError(null);
+                    }}
+                    style={styles.input}
+                  />
 
-                <TextInput
-                  placeholder="Password"
-                  placeholderTextColor="white"
-                  value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                    setError(null);
-                  }}
-                  style={styles.input}
-                  secureTextEntry
-                />
-              </View>
-
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={handleLogIn} style={styles.button}>
-                  <Text style={styles.buttonText}>Log in</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={handleSignUp}
-                  style={[styles.button, styles.buttonOutline]}
-                >
-                  <Text style={styles.buttonOutlineText}>Sign up</Text>
-                </TouchableOpacity>
-              </View>
-              {error ? (
-                <View style={styles.errorMessage}>
-                  <Text style={styles.errMsgText}>{error} </Text>
+                  <TextInput
+                    placeholder="Password"
+                    placeholderTextColor="white"
+                    value={password}
+                    onChangeText={(text) => {
+                      setPassword(text);
+                      setError(null);
+                    }}
+                    style={styles.input}
+                    secureTextEntry
+                  />
                 </View>
-              ) : null}
+
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity onPress={handleLogIn} style={styles.button}>
+                    <Text style={styles.buttonText}>Log in</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleSignUp}
+                    style={[styles.button, styles.buttonOutline]}
+                  >
+                    <Text style={styles.buttonOutlineText}>Sign up</Text>
+                  </TouchableOpacity>
+                </View>
+                {error ? (
+                  <View style={styles.errorMessage}>
+                    <Text style={styles.errMsgText}>{error} </Text>
+                  </View>
+                ) : null}
+              </View>
             </View>
-          </View>
-        </ImageBackground>
-      </KeyboardAvoidingView>
+          </ImageBackground>
+        </KeyboardAvoidingView>
+      </View>
     );
   }
 }
@@ -188,7 +191,7 @@ const styles = StyleSheet.create({
   polaroidContainer: {
     width: "80%",
     height: "45%",
-    borderWidth: 0.5,
+    borderWidth: 0,
     borderColor: "grey",
   },
 

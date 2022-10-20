@@ -9,28 +9,14 @@ export default function PolaroidStack({ isFilmFull, photos }) {
     return angle;
   }
 
-  function SinglePolaroid({ marginTop }) {
-    const rotation = randomRotation();
-
-    return (
-      <View
-        style={[
-          styles.container,
-          {
-            transform: [{ rotateX: rotation }, { rotateZ: rotation }],
-          },
-        ]}
-      >
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: photos[0].URL }} style={styles.image}></Image>
-        </View>
-        <View style={styles.textContainer}></View>
-      </View>
-    );
-  }
-
   return (
-    <View>
+    <View
+      style={{
+        // backgroundColor: "rgba(255, 255, 255, 0.5)",
+        padding: 15,
+        paddingBottom: 10,
+      }}
+    >
       {!isFilmFull ? (
         <Image
           source={require("../spiralalbumred.png")}
@@ -50,8 +36,6 @@ const styles = StyleSheet.create({
   container: {
     width: 100,
     height: 130,
-    backgroundColor: "white",
-
     marginBottom: 15,
   },
   imageContainer: {

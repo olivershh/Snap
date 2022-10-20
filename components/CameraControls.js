@@ -15,6 +15,7 @@ import * as ImageManipulator from "expo-image-manipulator";
 
 import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { TouchableOpacity } from "react-native";
+import colorMain from "../assets/colors/colorMain";
 
 export default function CameraControls({ cameraRef, setImage, image }) {
   const [film, setFilm] = useState(null);
@@ -169,6 +170,37 @@ export default function CameraControls({ cameraRef, setImage, image }) {
       }}
     >
       <ImageBackground
+        // source={require("../black-background.jpg")}
+        style={{
+          borderStyle: "solid",
+          borderColor: "black",
+          borderWidth: 3,
+          backgroundColor: "white",
+          borderTopColor: "white",
+          flex: 1,
+          padding: 15,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 15,
+        }}
+      >
+        <TouchableOpacity
+          style={[styles.cameraButtonsContainer]}
+          onPress={!image ? takePicture : resetImage}
+        >
+          {isLoading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : !image ? (
+            <MaterialIcons name="photo-camera" size={45} color="white" />
+          ) : (
+            <>
+              <Entypo name="back" size={24} color="white" />
+            </>
+          )}
+        </TouchableOpacity>
+      </ImageBackground>
+      <ImageBackground
         source={require("../filmreel.jpg")}
         // source={require("../filmcartoonblack.png")}
         style={[styles.filmButtonsContainer]}
@@ -183,36 +215,6 @@ export default function CameraControls({ cameraRef, setImage, image }) {
               : { name: "", size: 0, photosTaken: 0, isFilmFull: false }
           }
         />
-      </ImageBackground>
-      <ImageBackground
-        // source={require("../black-background.jpg")}
-        style={{
-          // borderStyle: "solid",
-          // borderColor: "black",
-          // borderWidth: 2,
-          // backgroundColor: ",
-          flex: 1,
-          padding: 15,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 15,
-        }}
-      >
-        <TouchableOpacity
-          style={[styles.cameraButtonsContainer]}
-          onPress={!image ? takePicture : resetImage}
-        >
-          {isLoading ? (
-            <ActivityIndicator size="small" color="black" />
-          ) : !image ? (
-            <MaterialIcons name="photo-camera" size={45} color="black" />
-          ) : (
-            <>
-              <Entypo name="back" size={24} color="black" />
-            </>
-          )}
-        </TouchableOpacity>
       </ImageBackground>
     </View>
   );
@@ -234,10 +236,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 5,
     borderRadius: 100,
-    width: 120,
-    height: 120,
-    marginTop: 30,
-    backgroundColor: "lightcyan",
+    width: 80,
+    height: 80,
+    backgroundColor: colorMain,
     // backgroundColor: "#e0bbe4",
     opacity: 1,
   },
