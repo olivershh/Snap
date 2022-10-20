@@ -10,7 +10,7 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const [loaded] = useFonts({
-    Handlee: require("../assets/fonts/Handlee-Regular.ttf"),
+    HandwrittenFont: require("../assets/fonts/Handlee-Regular.ttf"),
   });
 
   if (!loaded) {
@@ -19,7 +19,7 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
 
   function CaptionBox() {
     return photoObj.caption ? (
-      <Text style={{ fontFamily: "Handlee", fontSize: 24 }}>
+      <Text style={{ fontFamily: "HandwrittenFont", fontSize: 24 }}>
         {photoObj.caption}
       </Text>
     ) : (
@@ -70,7 +70,7 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
           style={{
             flex: 1,
             backgroundColor: "ghostwhite",
-            fontFamily: "Handlee",
+            fontFamily: "HandwrittenFont",
             fontSize: 24,
             textAlign: "center",
           }}
@@ -98,7 +98,7 @@ const Caption = ({ photoObj, albumName, index, photosArray, albumNumber }) => {
       >
         <Text
           style={{
-            fontFamily: "Handlee",
+            fontFamily: "HandwrittenFont",
             fontSize: 16,
             textAlign: "center",
           }}

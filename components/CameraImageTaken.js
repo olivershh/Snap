@@ -2,10 +2,10 @@ import { StyleSheet, Text, ImageBackground, View } from "react-native";
 import { BlurView } from "expo-blur";
 
 export default function CameraImageTaken({ image }) {
+  console.log("in image taken");
   return (
     <ImageBackground
-      // source={require("../mysteryphoto2.png")}
-      source={{ uri: image }}
+      source={require("../mysteryphoto.png")}
       style={styles.image}
     ></ImageBackground>
   );

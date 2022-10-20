@@ -46,7 +46,7 @@ export default function Film(props) {
         justifyContent: "center",
         padding: 10,
         flex: 1,
-        flexDirection: "column ",
+        flexDirection: "column",
       }}
     >
       <View style={{ marginRight: 1 }}>
