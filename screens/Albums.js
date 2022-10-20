@@ -41,14 +41,8 @@ export default function Albums() {
   }, [isFocused]);
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      style={{ backgroundColor: colorMain }}
-    >
-      <ImageBackground
-      // source={require("../potentialBG/abstract1.png")}
-      // resizeMode="repeat"
-      >
+    <ImageBackground source={require("../Bookshelf.png")} style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={styles.container} style={{ flex: 1 }}>
         <ImageBackground
           style={styles.albumsList}
           // source={require("../potentialBG/10doodles.png")}
@@ -65,8 +59,8 @@ export default function Albums() {
               />
             ))}
         </ImageBackground>
-      </ImageBackground>
-    </ScrollView>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
@@ -76,7 +70,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     height: "100%",
     width: "100%",
   },

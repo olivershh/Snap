@@ -36,13 +36,14 @@ export default AlbumCard;
 
 const styles = StyleSheet.create({
   card: {
-    paddingVertical: 20,
+    paddingVertical: 30,
 
-    width: "50%",
+    width: "40%",
     marginVertical: 5,
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+    // backgroundColor: "rgba(255, 255, 255, 0.9)",
   },
   // container: {
   //   backgroundColor: "red",
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
   // },
   name: {
     textAlign: "center",
-    padding: 5,
+    padding: 2,
     backgroundColor: "white",
     opacity: 0.7,
   },
